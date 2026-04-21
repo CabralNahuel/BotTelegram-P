@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
 
 const nodeEnv = process.env.NODE_ENV === "production" ? "production" : "development";
 const envFile = `.env.${nodeEnv}`;
@@ -17,15 +18,27 @@ if (!process.env.TELEGRAM_BOT_TOKEN) {
   }
 }
 
-if (!process.env.TELEGRAM_BOT_TOKEN) {
+const REQUIRED_ENV = [
+  "TELEGRAM_BOT_TOKEN",
+  "JWT_SECRET",
+  "HOST",
+  "MYSQL_USER",
+  "PASS",
+  "DATABASE",
+  "PUBLIC_BASE_URL",
+  "TELEGRAM_WEBHOOK_SECRET",
+];
+
+const missingEnv = REQUIRED_ENV.filter((k) => !process.env[k] || !String(process.env[k]).trim());
+if (missingEnv.length > 0) {
   throw new Error(
-    `Falta TELEGRAM_BOT_TOKEN. Definila en ${envFile}, en .env, en .env.production (carpeta ${root}), ` +
-      `o en el entorno. NODE_ENV="${process.env.NODE_ENV ?? ""}" (vacío ⇒ se intentó .env.development primero).`
+    `Faltan variables de entorno requeridas: ${missingEnv.join(", ")}. ` +
+      `Definilas en ${envFile}, en .env.production (carpeta ${root}), o en el panel de Render/PaaS.`
   );
 }
 
 const express = require("express");
-const { Bot } = require("grammy");
+const { Bot, webhookCallback } = require("grammy");
 const {
   setearComandos,
   comandoStart,
@@ -40,29 +53,31 @@ const cors = require("cors");
 const menuRuter = require("./rutas/menu");
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4005;
+const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL.replace(/\/$/, "");
+const WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET;
+const WEBHOOK_PATH = `/telegram/webhook/${WEBHOOK_SECRET}`;
 
+app.set("trust proxy", 1);
 app.use(cors());
-
-// Middleware para parsear el cuerpo de la solicitud
 app.use(express.json());
 
-// Conexión a la base de datos
-dbConect();
-dbSync();
-
-/**
- * Rutas del panel en la raíz (/login, /home/..., /menu/...) para cuando el proxy QUITA el prefijo
- * (p. ej. ProxyPass .../ http://127.0.0.1:4001/).
- * Si además definís API_PUBLIC_PREFIX=/apis/infobot, se duplican bajo ese prefijo para cuando el proxy
- * reenvía la URL completa. Así el front puede usar siempre .../apis/infobot/... en el navegador.
- */
+// Rutas con prefijo público opcional (ver README).
 const rawApiPrefix = (process.env.API_PUBLIC_PREFIX || "").trim();
 const normalizedApiPrefix = rawApiPrefix
   ? rawApiPrefix.startsWith("/")
     ? rawApiPrefix.replace(/\/$/, "")
     : `/${rawApiPrefix.replace(/\/$/, "")}`
   : "";
+
+// Health check público (Render + cron externo).
+function healthPayload() {
+  return { ok: true, uptime: process.uptime(), ts: new Date().toISOString() };
+}
+app.get("/health", (_req, res) => res.status(200).json(healthPayload()));
+if (normalizedApiPrefix) {
+  app.get(`${normalizedApiPrefix}/health`, (_req, res) => res.status(200).json(healthPayload()));
+}
 
 app.use("/", authRoutes);
 app.use("/menu/", menuRuter);
@@ -72,29 +87,25 @@ if (normalizedApiPrefix) {
   app.use(`${normalizedApiPrefix}/menu/`, menuRuter);
 }
 
-// Creación del bot
+// --- Bot de Telegram ---
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
-// Middleware de autenticación para el bot
-let solicitudDeTokenPendiente = {};
+const solicitudDeTokenPendiente = {};
 
-// Middleware global para verificar la existencia del usuario
 bot.use(async (ctx, next) => {
   try {
-    const userId = ctx.from.id;
+    const userId = ctx.from && ctx.from.id;
+    if (!userId) return next();
 
-    // Verificar si el usuario existe en la base de datos
     const usuario = await UsuarioMd.findByPk(userId);
 
     if (!usuario && !solicitudDeTokenPendiente[userId]) {
-      // Si el usuario no existe y no ha solicitado token, solicitar registro
       solicitudDeTokenPendiente[userId] = true;
       return ctx.reply(
         "No estás registrado. Por favor, proporciona un token para registrarte."
       );
     }
 
-    // Si el usuario ya está registrado o está en proceso de registro, continuar
     await next();
   } catch (err) {
     console.error("Error al verificar el usuario:", err);
@@ -102,23 +113,24 @@ bot.use(async (ctx, next) => {
   }
 });
 
-// Middleware para manejo de tokens
 bot.use(async (ctx, next) => {
-  const userId = ctx.from.id;
+  const userId = ctx.from && ctx.from.id;
+  if (!userId) return next();
 
   if (solicitudDeTokenPendiente[userId]) {
-    const token = ctx.message.text;
+    const token = ctx.message && ctx.message.text;
     try {
-      // Verificar si el token existe en la base de datos
       const tokenExistente = await TokenMd.findOne();
 
-      // Si el token que le pasó es igual al token que está en la base, continuar
-      if (tokenExistente.token == token) {
-        // Crear un nuevo usuario con el userId y token
+      if (tokenExistente && tokenExistente.token == token) {
+        // Contraseña aleatoria hasheada — evita exponer un default débil.
+        const randomPassword = require("crypto").randomBytes(12).toString("base64url");
+        const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
         await UsuarioMd.create({
           id: userId,
-          username: ctx.from.username || userId,
-          password: "1234",
+          username: ctx.from.username || String(userId),
+          password: hashedPassword,
           token: tokenExistente.token,
           historial: [],
         });
@@ -126,11 +138,9 @@ bot.use(async (ctx, next) => {
 
         await ctx.reply("Registro exitoso. Ahora puede usar el bot.");
 
-        // Iniciar el comando /start explícitamente
         const usuario = await UsuarioMd.findByPk(userId);
         await comandoStart(ctx, usuario.historial);
       } else {
-        console.log(token);
         return ctx.reply("Token no válido. Por favor, intente nuevamente.");
       }
     } catch (err) {
@@ -138,25 +148,19 @@ bot.use(async (ctx, next) => {
       return ctx.reply("Token no válido.");
     }
   } else {
-    // No guardar token en historial
     await next();
   }
 });
 
-// Configurar comandos
 setearComandos(bot);
 
-// Manejador del comando /start
 bot.command(["start", "Start"], async (ctx) => {
   const usuarioId = ctx.from.id;
   const usuario = await UsuarioMd.findByPk(usuarioId);
-
-  console.log(usuario);
   const historialUsuario = usuario ? usuario.historial : [];
   await comandoStart(ctx, historialUsuario);
 });
 
-// Manejador de comandos dinámicos
 bot.on(":text", async (ctx, next) => {
   try {
     if (!ctx.update || !ctx.update.message) {
@@ -168,9 +172,7 @@ bot.on(":text", async (ctx, next) => {
     const usuario = await UsuarioMd.findByPk(usuarioId);
     const historialUsuario = usuario ? usuario.historial : [];
 
-    // Verifica si el mensaje no es un token antes de agregar al historial
     if (!solicitudDeTokenPendiente[usuarioId]) {
-      // Agregar el comando recibido al historial del usuario
       historialUsuario.push(ctx.message.text);
       if (usuario) {
         await usuario.update({ historial: historialUsuario });
@@ -184,7 +186,6 @@ bot.on(":text", async (ctx, next) => {
   }
 });
 
-// Manejador de eventos para botones
 bot.on("callback_query", async (ctx) => {
   try {
     const usuarioId = ctx.from.id;
@@ -197,16 +198,51 @@ bot.on("callback_query", async (ctx) => {
   }
 });
 
-// Iniciar el bot
-try {
-  bot.start();
-  console.log("bot inicio correctamente");
-} catch (error) {
-  console.error("Error al iniciar el bot", error);
+// Endpoint webhook: Telegram hace POST acá. La ruta lleva el secret en el path
+// y grammY valida además el header X-Telegram-Bot-Api-Secret-Token.
+app.use(WEBHOOK_PATH, webhookCallback(bot, "express", {
+  secretToken: WEBHOOK_SECRET,
+}));
+
+async function start() {
+  await dbConect();
+  await dbSync();
+
+  await bot.init();
+
+  const server = app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  });
+
+  const webhookUrl = `${PUBLIC_BASE_URL}${WEBHOOK_PATH}`;
+  try {
+    await bot.api.setWebhook(webhookUrl, {
+      secret_token: WEBHOOK_SECRET,
+      drop_pending_updates: true,
+    });
+    console.log(`Webhook registrado: ${webhookUrl}`);
+  } catch (err) {
+    console.error("No se pudo registrar el webhook:", err);
+  }
+
+  const shutdown = async (signal) => {
+    console.log(`Recibido ${signal}, cerrando...`);
+    try {
+      await bot.api.deleteWebhook().catch(() => {});
+      server.close(() => process.exit(0));
+      setTimeout(() => process.exit(1), 10000).unref();
+    } catch (err) {
+      console.error("Error en shutdown:", err);
+      process.exit(1);
+    }
+  };
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
 }
-// Iniciar el servidor Express
-app.listen(PORT, async () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+
+start().catch((err) => {
+  console.error("Error al iniciar la aplicación:", err);
+  process.exit(1);
 });
 
 module.exports = { bot };

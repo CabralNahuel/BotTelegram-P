@@ -7,9 +7,9 @@
   "author": "Agampreet Singh <68941022+agam778@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
     "start:dev": "cross-env NODE_ENV=development nodemon index.js",
-    "start:prod": "cross-env NODE_ENV=production nodemon index.js"
+    "start:prod": "cross-env NODE_ENV=production node index.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -20,11 +20,10 @@
     "grammy": "^1.17.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.4",
-    "nodemon": "^3.1.0",
-    "path": "^0.12.7",
-    "sequelize": "^6.37.3",
-    "socks-proxy-agent": "^8.0.4",
-    "sqlite3": "^5.1.7"
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   },
   "packageManager": "yarn@4.0.2"
 }

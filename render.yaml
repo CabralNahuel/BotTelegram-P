@@ -1,0 +1,33 @@
+# Blueprint Render: Web service Node en TelegramBot/ (monorepo).
+# En el dashboard: New > Blueprint > conectá el repo y elegí este archivo, o creá un Web Service manual:
+#   Root Directory: TelegramBot
+#   Build: npm install
+#   Start: npm start
+#   Health Check Path: /health
+#
+# Variables a cargar en Render (Environment):
+#   TELEGRAM_BOT_TOKEN        token del bot (de @BotFather)
+#   TELEGRAM_WEBHOOK_SECRET   string aleatorio largo (ej: openssl rand -hex 32)
+#   PUBLIC_BASE_URL           URL pública del servicio, ej: https://telegram-bot-backend.onrender.com
+#   JWT_SECRET                string aleatorio largo (ej: openssl rand -base64 48)
+#   HOST, MYSQL_USER, PASS, DATABASE, MYSQLPORT   credenciales de la DB
+#   DB_SSL=true               requerido en TiDB Cloud / Aiven / proveedores con TLS obligatorio
+#   API_PUBLIC_PREFIX         opcional (duplica rutas bajo un prefijo)
+# Render inyecta PORT automáticamente.
+#
+# DB MySQL gratis: TiDB Cloud Serverless (compatible con MySQL, requiere DB_SSL=true, puerto 4000).
+# También sirven Aiven free o cualquier MySQL externo con TLS.
+#
+# Tier gratuito de Render: el servicio duerme a los ~15 min sin tráfico HTTP. Configurá un cron en
+# https://cron-job.org apuntando a https://TU-SERVICIO.onrender.com/health cada 10 min.
+# Telegram envía updates vía webhook al endpoint /telegram/webhook/<TELEGRAM_WEBHOOK_SECRET>.
+
+services:
+  - type: web
+    name: telegram-bot-backend
+    runtime: node
+    plan: free
+    rootDir: TelegramBot
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
