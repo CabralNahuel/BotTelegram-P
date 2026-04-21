@@ -1,0 +1,225 @@
+/* Encode Sans (principal) + Roboto (secundaria) — manual PBA */
+@import url("https://fonts.googleapis.com/css2?family=Encode+Sans:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+/* ========== SISTEMA DE DISEÑO PBA (Provincia de Buenos Aires) ========== */
+:root {
+  --font-primary: "Encode Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-secondary: "Roboto", "Helvetica Neue", Arial, sans-serif;
+
+  /* Identidad — primario / secundario institucional */
+  --pba-primary: #009aae;
+  --pba-secondary: #414042;
+  --pba-celeste: #00aec3;
+  --pba-azul-isologo: #417099;
+
+  /* Isologo */
+  --pba-rosa: #e81f76;
+  --pba-azul: #417099;
+  --pba-celeste-logo: #00aec3;
+
+  /* Neutros */
+  --pba-negro: #000000;
+  --pba-gris-medio: #838383;
+  --pba-gris-claro: #c0c0c0;
+  --pba-gris-muy-claro: #f0f0f0;
+  --pba-footer-bg: #e6e6e6;
+
+  /* Acentos (uso puntual) */
+  --pba-rojo: #be1717;
+  --pba-violeta: #592673;
+  --pba-azul-oscuro: #1f3464;
+  --pba-verde: #22a954;
+  --pba-amarillo: #ebb813;
+
+  /* Gradientes derivados (limitado) */
+  --pba-gradiente-suave: linear-gradient(180deg, #cae7ea 0%, #a3d8e7 50%, #74c9e3 100%);
+  --pba-banner-suave: #b5e4e5;
+
+  /* Compatibilidad con código existente (--colorN) */
+  --color1: var(--pba-primary);
+  --color1-10: #1aa3b5;
+  --color1-20: #33adc0;
+  --color1-30: #4db7cb;
+  --color1-40: #66c1d5;
+
+  --color2: var(--pba-gris-medio);
+  --color2-10: #909090;
+  --color2-20: #9d9d9d;
+  --color2-30: #aaaaaa;
+  --color2-40: #b7b7b7;
+  --color2-50: #c4c4c4;
+  --color2-60: var(--pba-gris-claro);
+
+  --color3: var(--pba-negro);
+  --color3-10: #1a1a1a;
+  --color3-20: #333333;
+  --color3-30: #4d4d4d;
+  --color3-80: #cccccc;
+  --color3-90: #e6e6e6;
+
+  --color4: var(--pba-rosa);
+  --color4-10: #eb3c8a;
+  --color4-20: #ee599e;
+  --color4-30: #f276b2;
+  --color4-40: #f593c5;
+  --color4-50: #f8aec9;
+  --color4-60: #fbc8e1;
+  --color4-70: #fdd3e7;
+  --color4-80: #ffdde3;
+  --color4-90: #ffe7f1;
+
+  --color5: var(--pba-rojo);
+  --color5-10: #cb3939;
+  --color5-20: #d85a5a;
+  --color5-30: #e57c7c;
+  --color5-40: #f29d9d;
+  --color5-50: #fdbdbd;
+  --color5-60: #ffdfdf;
+  --color5-70: #ffe3e3;
+  --color5-80: #ffeaea;
+  --color5-90: #fff2f2;
+
+  --color6: var(--pba-violeta);
+  --color6-10: #6c3f86;
+  --color6-20: #80589a;
+  --color6-30: #9472ad;
+  --color6-40: #a78bc0;
+  --color6-50: #bba4d3;
+  --color6-60: #cebee6;
+  --color6-70: #e1d7f9;
+  --color6-80: #ece3ff;
+  --color6-90: #f5f0ff;
+
+  --color7: #74c9e3;
+  --color7-10: #8cd2e9;
+  --color7-20: #a3dbea;
+  --color7-30: #bbe4ef;
+  --color7-40: #d2edfb;
+
+  --color8: var(--pba-verde);
+  --color8-10: #3dbd70;
+  --color8-20: #57d18b;
+  --color8-30: #72e5a7;
+  --color8-40: #8df9c2;
+  --color8-50: #a7ffdc;
+  --color8-60: #c2ffe9;
+
+  --color9: var(--pba-azul-oscuro);
+  --color9-10: #36487e;
+  --color9-20: #4d5c98;
+  --color9-30: #6471b2;
+  --color9-40: #7b85cc;
+  --color9-50: #9299e6;
+  --color9-60: #a9adff;
+  --color9-70: #c0c2ff;
+
+  --color10: #a3d8e7;
+  --color10-10: #b5e1ed;
+  --color10-20: #c6ebf3;
+  --color10-30: #d7f4f9;
+  --color10-40: #e8fdff;
+
+  --color11: var(--pba-amarillo);
+  --color11-10: #f0c233;
+  --color11-20: #f4cc53;
+  --color11-30: #f7d673;
+  --color11-40: #fae093;
+  --color11-50: #fdeaaf;
+  --color11-60: #fffbdf;
+
+  --color12: #cae7ea;
+  --color12-10: #d5eced;
+
+  --degrade1: linear-gradient(to left, var(--color7), var(--color10));
+  --degrade2: linear-gradient(to right, var(--color6), var(--color9));
+
+  /* Superficies */
+  --pba-header-bg: #ffffff;
+  --pba-bg-pagina: var(--pba-gris-muy-claro);
+  --pba-texto-menu: var(--pba-secondary);
+  --pba-sombra-boton: 0px 10px 5px rgba(65, 64, 66, 0.18);
+}
+
+/* Jerarquía tipográfica base */
+body {
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--pba-negro);
+  background-color: var(--pba-bg-pagina);
+}
+
+h1,
+h2 {
+  font-family: var(--font-primary);
+  font-weight: 800;
+  color: var(--pba-primary);
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--pba-secondary);
+}
+
+h4 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--pba-secondary);
+}
+
+p {
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--pba-negro);
+}
+
+a {
+  color: var(--pba-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--pba-primary);
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+.input__mensaje {
+  width: 100%;
+  height: 10vh;
+}
+
+.estadistica {
+  width: 40vw;
+  height: 41vh;
+}
+
+@media (max-width: 768px) {
+  .estadistica {
+    width: 70vw;
+    height: 80vh;
+  }
+}
+
+.chart-container {
+  min-height: 59vh;
+}
+
+.TipografiaEstadisticaVacia {
+  font-family: var(--font-primary);
+  color: var(--pba-rojo);
+}
+
+/* Botón institucional (tarjeta / CTA) */
+.pba-btn-sombra {
+  background: #ffffff;
+  box-shadow: var(--pba-sombra-boton);
+}

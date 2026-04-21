@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* estos estilos son muy especificos porque no encontre donde pegarle desde el codigo, ya que utiliza material ui y crea componentes con estilo propio */
+
+.css-2dum1v-MuiDrawer-docked .MuiDrawer-paper {
+  height: min-content !important;
+}
+.css-1hsz34s-MuiDrawer-docked .MuiDrawer-paper {
+  height: min-content !important;
+}
+
+
+.css-1l8j5k8,.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+  border: none !important;
+}
+.css-yuamwo{
+  color:white !important;
+}
+
+.css-1r9jet7 {
+  background-color: var(--color1) !important;
+}
+.css-nsu0n1 {
+  height: 92% !important;
+}
+
+.css-flsc5w,.css-11qlsel-MuiPaper-root-MuiAppBar-root {
+  box-shadow: none !important;
+}
+
+.css-1e469hc-MuiToolbar-root {
+    display: grid !important;
+    grid-template-columns: 10% 90% !important;
+    
+}
+.css-94gf1o {
+    display: grid !important;
+    justify-content: center !important;
+}
+
+.css-1e469hc-MuiToolbar-root {
+    padding-left: 24px !important;
+}
+
+.css-1ixldyh-MuiPaper-root-MuiAppBar-root {
+  box-shadow: none !important;
+}
+
+
+/* estilo del tipo de letra y color de los botones del drawer */
+.css-15wb9rl-MuiButtonBase-root-MuiListItemButton-root:hover{
+  background-color: var(--color1-30) !important;
+}
+.css-10hburv-MuiTypography-root{
+  font-family: var(--font-primary) !important;
+  font-weight: 600 !important;
+  color: white !important;
+  
+}
+
+.css-1kvubh9-MuiButtonBase-root-MuiListItemButton-root {
+  margin-top: 10px !important;
+  
+}
+
+.css-flsc5w,.css-1hsux2o-MuiToolbar-root {
+
+position: absolute !important;
+width: 100vw !important;
+right: inherit !important;
+
+}
+/* aca manejo el color de los botones cuando esta cerrado el drawer  cuando se hace click*/
+.css-xqje9-MuiButtonBase-root-MuiListItemButton-root:hover {
+  background: var(--color2-20) !important;
+}
+
+.css-xqje9-MuiButtonBase-root-MuiListItemButton-root {
+  background: transparent !important;
+}
+
+/* 
+color del borde del texfield menu y demas */
+
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+
+  border-radius: 23px !important;
+}
+
+
+.css-segi59.Mui-focused .MuiOutlinedInput-notchedOutline, .css-1bp1ao6.Mui-focused .MuiOutlinedInput-notchedOutline, .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline{
+
+  border-color: var(--color1) !important;
+  border-radius: 23px !important;
+}
+
+
+.css-1ald77x.Mui-focused,.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root{
+  color: var(--color1) !important; 
+}
+/* ----------------------------------------------------- */
+
+/* ----------------------------------------------------- */
+
+.css-1086bdv-MuiPaper-root-MuiAccordion-root {
+  box-shadow: none !important;
+}
+/* ----------------------------------------------------- */
+
+/* estilos de ckeditor */
+
+@media print {
+	body {
+		margin: 0 !important;
+	}
+}
+
+.main-container {
+	font-family: var(--font-primary), sans-serif;
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ck-content {
+	font-family: var(--font-primary), sans-serif;
+	line-height: 1.6;
+	word-break: break-word;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+	min-width: 795px;
+	max-width: 795px;
+}
+.ck.ck-balloon-panel.ck-powered-by-balloon .ck.ck-powered-by{
+  display: none;
+}
+/* ----------------------------------------------------- */
+.BotonAgregar__botonesDeEstilos{
+  width: 3rem;
+  height: 2px !important;
+  font-family: var(--font-secondary) !important;
+  color: var(--pba-primary) !important;
+  border: none !important;
+  border-radius: 0px !important; 
+
+}
+
+
+.boton-activo {
+  width: 3rem;
+  height: 1.5rem !important;
+  font-family: var(--font-secondary) !important;
+  color:white !important;
+  border-radius: 5px !important; 
+  background: var(--pba-primary) !important;
+}

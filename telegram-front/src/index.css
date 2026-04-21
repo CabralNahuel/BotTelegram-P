@@ -1,0 +1,4 @@
+/* Refuerzo accesibilidad: foco visible coherente con PBA */
+#root {
+  min-height: 100vh;
+}
