@@ -1,78 +1,153 @@
 import { createTheme } from '@mui/material/styles';
 
+/** Tokens del design system "Management Reporting" (DESIGN.md) */
+const ds = {
+  background: '#13131b',
+  onBackground: '#e4e1ed',
+  surfaceContainerLowest: '#0d0d15',
+  surfaceContainerLow: '#1b1b23',
+  surfaceContainer: '#1f1f27',
+  surfaceContainerHigh: '#292932',
+  surfaceContainerHighest: '#34343d',
+  onSurface: '#e4e1ed',
+  onSurfaceVariant: '#c7c4d7',
+  outline: '#908fa0',
+  outlineVariant: '#464554',
+  primary: '#c0c1ff',
+  onPrimary: '#1000a9',
+  primaryContainer: '#8083ff',
+  onPrimaryContainer: '#0d0096',
+  inversePrimary: '#494bd6',
+  secondary: '#4edea3',
+  onSecondary: '#003824',
+  tertiary: '#ffb95f',
+  error: '#ffb4ab',
+  onError: '#690005',
+  surfaceTint: '#c0c1ff',
+} as const;
+
 /**
- * Tema CN-DEV: minimal, dark, técnico. Negro profundo + acento rojo.
- * Tipografía monoespaciada para detalles técnicos, sans-serif para UI.
+ * Tema alineado al design system: navy-carbón, acento índigo, secundario esmeralda.
+ * Tipografía Inter (jerarquía del YAML).
  */
 export const pbaTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#E50914',
-      light: '#FF1E2D',
-      dark: '#B3060F',
-      contrastText: '#FFFFFF',
+      main: ds.primary,
+      light: '#e1e0ff',
+      dark: ds.inversePrimary,
+      contrastText: ds.onPrimary,
     },
     secondary: {
-      main: '#E5E5E5',
-      contrastText: '#0A0A0A',
+      main: ds.secondary,
+      light: '#6ffbbe',
+      dark: '#00a572',
+      contrastText: ds.onSecondary,
     },
-    error: { main: '#E50914' },
-    success: { main: '#22c55e' },
-    info: { main: '#9CA3AF' },
-    warning: { main: '#F59E0B' },
+    error: {
+      main: ds.error,
+      contrastText: ds.onError,
+      dark: '#93000a',
+    },
+    success: { main: ds.secondary },
+    info: { main: ds.outline },
+    warning: { main: ds.tertiary },
     background: {
-      default: '#0A0A0A',
-      paper: '#141414',
+      default: ds.background,
+      paper: ds.surfaceContainer,
     },
     text: {
-      primary: '#EDEDED',
-      secondary: '#9CA3AF',
-      disabled: '#4B5563',
+      primary: ds.onSurface,
+      secondary: ds.onSurfaceVariant,
+      disabled: ds.outlineVariant,
     },
-    divider: '#262626',
+    divider: ds.outlineVariant,
     action: {
-      hover: 'rgba(229, 9, 20, 0.08)',
-      selected: 'rgba(229, 9, 20, 0.16)',
+      hover: 'rgba(192, 193, 255, 0.08)',
+      selected: 'rgba(192, 193, 255, 0.16)',
+      active: 'rgba(192, 193, 255, 0.12)',
     },
   },
   typography: {
     fontFamily: '"Inter", "Helvetica Neue", Arial, sans-serif',
-    h1: { fontWeight: 700, fontSize: '2rem', letterSpacing: '-0.02em' },
-    h2: { fontWeight: 700, fontSize: '1.75rem', letterSpacing: '-0.02em' },
-    h3: { fontWeight: 600, fontSize: '1.5rem', letterSpacing: '-0.01em' },
-    h4: { fontWeight: 600, fontSize: '1.25rem' },
-    h5: { fontWeight: 600 },
-    h6: { fontWeight: 600 },
-    body1: { fontSize: '1rem', lineHeight: 1.6 },
-    body2: { fontSize: '0.9375rem', lineHeight: 1.6, color: '#9CA3AF' },
-    button: { fontWeight: 600, textTransform: 'none', letterSpacing: '0.01em' },
+    h1: {
+      fontWeight: 600,
+      fontSize: '2rem',
+      lineHeight: 1.2,
+      letterSpacing: '-0.01em',
+    },
+    h2: {
+      fontWeight: 600,
+      fontSize: '1.5rem',
+      lineHeight: 1.3,
+      letterSpacing: '-0.01em',
+    },
+    h3: {
+      fontWeight: 600,
+      fontSize: '1.125rem',
+      lineHeight: 1.4,
+      letterSpacing: 0,
+    },
+    h4: { fontWeight: 600, fontSize: '1rem', lineHeight: 1.4 },
+    h5: { fontWeight: 600, fontSize: '0.9375rem', lineHeight: 1.4 },
+    h6: { fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.4 },
+    body1: {
+      fontSize: '1rem',
+      fontWeight: 400,
+      lineHeight: 1.6,
+      letterSpacing: 0,
+    },
+    body2: {
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      lineHeight: 1.5,
+      letterSpacing: 0,
+      color: ds.onSurfaceVariant,
+      fontFeatureSettings: '"tnum"',
+    },
+    button: {
+      fontWeight: 500,
+      fontSize: '0.875rem',
+      lineHeight: 1,
+      letterSpacing: '0.02em',
+      textTransform: 'none',
+    },
+    caption: {
+      fontSize: '0.75rem',
+      fontWeight: 500,
+      lineHeight: 1,
+      letterSpacing: '0.02em',
+    },
   },
-  shape: { borderRadius: 6 },
+  shape: { borderRadius: 4 },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
           fontFamily: '"Inter", sans-serif',
-          backgroundColor: '#0A0A0A',
-          color: '#EDEDED',
+          backgroundColor: ds.background,
+          color: ds.onSurface,
         },
         'a:focus-visible, button:focus-visible': {
-          outline: '2px solid #E50914',
+          outline: `2px solid ${ds.primary}`,
           outlineOffset: '2px',
         },
         '*::-webkit-scrollbar': { width: '8px', height: '8px' },
-        '*::-webkit-scrollbar-track': { background: '#141414' },
-        '*::-webkit-scrollbar-thumb': { background: '#333', borderRadius: '4px' },
-        '*::-webkit-scrollbar-thumb:hover': { background: '#E50914' },
+        '*::-webkit-scrollbar-track': { background: ds.surfaceContainerLow },
+        '*::-webkit-scrollbar-thumb': {
+          background: ds.surfaceContainerHighest,
+          borderRadius: '4px',
+        },
+        '*::-webkit-scrollbar-thumb:hover': { background: ds.primaryContainer },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: '#141414',
-          border: '1px solid #262626',
+          backgroundColor: ds.surfaceContainer,
+          border: `1px solid ${ds.outlineVariant}`,
         },
       },
     },
@@ -80,29 +155,30 @@ export const pbaTheme = createTheme({
       defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
-          borderRadius: '6px',
-          fontWeight: 600,
+          borderRadius: '4px',
+          fontWeight: 500,
         },
         containedPrimary: {
-          backgroundColor: '#E50914',
-          color: '#FFFFFF',
+          backgroundColor: ds.primary,
+          color: ds.onPrimary,
           '&:hover': {
-            backgroundColor: '#FF1E2D',
+            backgroundColor: ds.primaryContainer,
+            color: ds.onPrimaryContainer,
           },
         },
         outlined: {
           backgroundColor: 'transparent',
-          borderColor: '#333',
-          color: '#EDEDED',
+          borderColor: ds.outlineVariant,
+          color: ds.onSurface,
           '&:hover': {
-            borderColor: '#E50914',
-            backgroundColor: 'rgba(229, 9, 20, 0.08)',
+            borderColor: ds.outline,
+            backgroundColor: 'rgba(192, 193, 255, 0.06)',
           },
         },
         text: {
-          color: '#EDEDED',
+          color: ds.onSurface,
           '&:hover': {
-            backgroundColor: 'rgba(229, 9, 20, 0.08)',
+            backgroundColor: 'rgba(192, 193, 255, 0.08)',
           },
         },
       },
@@ -111,26 +187,31 @@ export const pbaTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            '& fieldset': { borderColor: '#333' },
-            '&:hover fieldset': { borderColor: '#525252' },
-            '&.Mui-focused fieldset': { borderColor: '#E50914' },
+            '& fieldset': { borderColor: ds.outlineVariant },
+            '&:hover fieldset': { borderColor: ds.outline },
+            '&.Mui-focused fieldset': { borderColor: ds.primary },
           },
-          '& .MuiInputLabel-root.Mui-focused': { color: '#E50914' },
+          '& .MuiInputLabel-root.Mui-focused': { color: ds.primary },
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#0A0A0A',
-          borderBottom: '1px solid #262626',
+          backgroundColor: ds.surfaceContainerLowest,
+          borderBottom: `1px solid ${ds.outlineVariant}`,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
-        root: { borderColor: '#262626' },
-        head: { backgroundColor: '#1A1A1A', fontWeight: 600 },
+        root: { borderColor: ds.outlineVariant },
+        head: {
+          backgroundColor: ds.surfaceContainerHigh,
+          fontWeight: 500,
+          fontSize: '0.75rem',
+          letterSpacing: '0.02em',
+        },
       },
     },
   },

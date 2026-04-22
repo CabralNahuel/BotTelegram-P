@@ -89,14 +89,14 @@ const Login: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: 'radial-gradient(ellipse at center, #141414 0%, #0A0A0A 70%, #000000 100%)',
+        background: 'radial-gradient(ellipse at center, #1f1f27 0%, #13131b 70%, #0d0d15 100%)',
         position: 'relative',
         '&::before': {
           content: '""',
           position: 'absolute',
           inset: 0,
           backgroundImage:
-            'linear-gradient(rgba(229, 9, 20, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(229, 9, 20, 0.04) 1px, transparent 1px)',
+            'linear-gradient(rgba(192, 193, 255, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(192, 193, 255, 0.06) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
           pointerEvents: 'none',
         },

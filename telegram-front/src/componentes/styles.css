@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-/* estos estilos son muy especificos porque no encontre donde pegarle desde el codigo, ya que utiliza material ui y crea componentes con estilo propio */
+/* Tipografía global: Inter (App.css). Estilos muy específicos para clases generadas por MUI. */
 
 .css-2dum1v-MuiDrawer-docked .MuiDrawer-paper {
   height: min-content !important;

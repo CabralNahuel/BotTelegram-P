@@ -1,154 +1,150 @@
-/* Inter (UI) + JetBrains Mono (monoespaciada para acentos técnicos) */
+/* Inter — tipografía única del design system (pesos 300–800) */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap");
 
-/* ========== SISTEMA DE DISEÑO CN-DEV (tema oscuro minimal) ========== */
+/* ========== Design system Management Reporting (DESIGN.md) ========== */
 :root {
   --font-primary: "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-secondary: "JetBrains Mono", "Menlo", monospace;
-
-  /* Identidad — acento CN-DEV rojo */
-  --pba-primary: #e50914;
-  --pba-primary-hover: #ff1e2d;
-  --pba-primary-dim: #b3060f;
-  --pba-secondary: #9ca3af;
-  --pba-celeste: #e50914;
-  --pba-azul-isologo: #9ca3af;
-
-  /* Legacy isologo (mantenidos para compat, remapeados) */
-  --pba-rosa: #e50914;
-  --pba-azul: #9ca3af;
-  --pba-celeste-logo: #e50914;
-
-  /* Neutros oscuros */
-  --pba-negro: #0a0a0a;
-  --pba-gris-medio: #6b7280;
-  --pba-gris-claro: #262626;
-  --pba-gris-muy-claro: #141414;
-  --pba-footer-bg: #0a0a0a;
+  --font-secondary: "Inter", "Helvetica Neue", Arial, sans-serif;
 
   /* Acentos */
-  --pba-rojo: #e50914;
-  --pba-violeta: #a78bfa;
-  --pba-azul-oscuro: #1e293b;
-  --pba-verde: #22c55e;
-  --pba-amarillo: #f59e0b;
+  --pba-primary: #c0c1ff;
+  --pba-primary-hover: #e1e0ff;
+  --pba-primary-dim: #494bd6;
+  --pba-secondary: #c7c4d7;
+  --pba-celeste: #8083ff;
+  --pba-azul-isologo: #908fa0;
 
-  /* Gradientes */
-  --pba-gradiente-suave: linear-gradient(180deg, #0a0a0a 0%, #141414 100%);
-  --pba-banner-suave: #141414;
+  /* Compat isologo / legacy */
+  --pba-rosa: #c0c1ff;
+  --pba-azul: #908fa0;
+  --pba-celeste-logo: #8083ff;
 
-  /* Compatibilidad legacy (--colorN) remapeados al nuevo esquema */
+  /* Superficies (navy-carbón) */
+  --pba-negro: #13131b;
+  --pba-gris-medio: #908fa0;
+  --pba-gris-claro: #464554;
+  --pba-gris-muy-claro: #1f1f27;
+  --pba-footer-bg: #0d0d15;
+
+  --pba-rojo: #ffb4ab;
+  --pba-violeta: #c0c1ff;
+  --pba-azul-oscuro: #292932;
+  --pba-verde: #4edea3;
+  --pba-amarillo: #ffb95f;
+
+  --pba-gradiente-suave: linear-gradient(180deg, #13131b 0%, #1f1f27 100%);
+  --pba-banner-suave: #1f1f27;
+
+  /* Legacy (--colorN) remapeados al esquema índigo / superficies */
   --color1: var(--pba-primary);
-  --color1-10: #eb3b45;
-  --color1-20: #ef5c64;
-  --color1-30: #f27d83;
-  --color1-40: #f59ea2;
+  --color1-10: #d4d5ff;
+  --color1-20: #bebfff;
+  --color1-30: #a8a9f5;
+  --color1-40: #9293eb;
 
   --color2: var(--pba-gris-medio);
-  --color2-10: #7a8491;
-  --color2-20: #8a94a0;
-  --color2-30: #9aa3af;
-  --color2-40: #a9b2bd;
-  --color2-50: #b9c1ca;
+  --color2-10: #9c9baa;
+  --color2-20: #a8a7b4;
+  --color2-30: #b4b3be;
+  --color2-40: #c0bfc8;
+  --color2-50: #cccbd2;
   --color2-60: var(--pba-gris-claro);
 
-  --color3: #ededed;
-  --color3-10: #d4d4d4;
-  --color3-20: #a3a3a3;
-  --color3-30: #737373;
-  --color3-80: #262626;
-  --color3-90: #141414;
+  --color3: #e4e1ed;
+  --color3-10: #d8d5e3;
+  --color3-20: #c7c4d7;
+  --color3-30: #b0adbf;
+  --color3-80: #464554;
+  --color3-90: #1f1f27;
 
   --color4: var(--pba-primary);
-  --color4-10: #eb3b45;
-  --color4-20: #ef5c64;
-  --color4-30: #f27d83;
-  --color4-40: #f59ea2;
-  --color4-50: #f8bec1;
-  --color4-60: #fbd0d3;
-  --color4-70: #fcd9db;
-  --color4-80: #fde2e4;
-  --color4-90: #fee9eb;
+  --color4-10: #d4d5ff;
+  --color4-20: #bebfff;
+  --color4-30: #a8a9f5;
+  --color4-40: #9293eb;
+  --color4-50: #7c7de1;
+  --color4-60: #6667d7;
+  --color4-70: #5051cd;
+  --color4-80: #3a3bc3;
+  --color4-90: #2425b9;
 
-  --color5: var(--pba-rojo);
-  --color5-10: #cb3939;
-  --color5-20: #d85a5a;
-  --color5-30: #e57c7c;
-  --color5-40: #f29d9d;
-  --color5-50: #fdbdbd;
-  --color5-60: #ffdfdf;
-  --color5-70: #ffe3e3;
-  --color5-80: #ffeaea;
-  --color5-90: #fff2f2;
+  --color5: #ffb4ab;
+  --color5-10: #ffc4bd;
+  --color5-20: #ffd4cf;
+  --color5-30: #ffe4e1;
+  --color5-40: #fff4f3;
+  --color5-50: #fff8f7;
+  --color5-60: #fffcfc;
+  --color5-70: #fffdfd;
+  --color5-80: #fffefe;
+  --color5-90: #ffffff;
 
   --color6: var(--pba-violeta);
-  --color6-10: #b19cfb;
-  --color6-20: #baadfc;
-  --color6-30: #c3befd;
-  --color6-40: #ccceff;
-  --color6-50: #d5dfff;
-  --color6-60: #deeeff;
-  --color6-70: #e7f5ff;
-  --color6-80: #eff9ff;
-  --color6-90: #f7fcff;
+  --color6-10: #cdceff;
+  --color6-20: #dadbff;
+  --color6-30: #e7e8ff;
+  --color6-40: #f4f4ff;
+  --color6-50: #fafaff;
+  --color6-60: #fcfcff;
+  --color6-70: #fdfdff;
+  --color6-80: #fefeff;
+  --color6-90: #ffffff;
 
-  --color7: #6b7280;
-  --color7-10: #7a8491;
-  --color7-20: #8a94a0;
-  --color7-30: #9aa3af;
-  --color7-40: #a9b2bd;
+  --color7: #908fa0;
+  --color7-10: #9c9baa;
+  --color7-20: #a8a7b4;
+  --color7-30: #b4b3be;
+  --color7-40: #c0bfc8;
 
   --color8: var(--pba-verde);
-  --color8-10: #3dbd70;
-  --color8-20: #57d18b;
-  --color8-30: #72e5a7;
-  --color8-40: #8df9c2;
-  --color8-50: #a7ffdc;
-  --color8-60: #c2ffe9;
+  --color8-10: #6ae4b4;
+  --color8-20: #86e9c5;
+  --color8-30: #a2eed6;
+  --color8-40: #bef3e7;
+  --color8-50: #daf8f8;
+  --color8-60: #f0fdf9;
 
-  --color9: var(--pba-azul-oscuro);
-  --color9-10: #36487e;
-  --color9-20: #4d5c98;
-  --color9-30: #6471b2;
-  --color9-40: #7b85cc;
-  --color9-50: #9299e6;
-  --color9-60: #a9adff;
-  --color9-70: #c0c2ff;
+  --color9: #494bd6;
+  --color9-10: #5c5edb;
+  --color9-20: #6f71e0;
+  --color9-30: #8284e5;
+  --color9-40: #9597ea;
+  --color9-50: #a8aaef;
+  --color9-60: #bbbdf4;
+  --color9-70: #cecff9;
 
-  --color10: #374151;
-  --color10-10: #475569;
-  --color10-20: #64748b;
-  --color10-30: #94a3b8;
-  --color10-40: #cbd5e1;
+  --color10: #34343d;
+  --color10-10: #46454f;
+  --color10-20: #585761;
+  --color10-30: #6a6973;
+  --color10-40: #7c7b85;
 
   --color11: var(--pba-amarillo);
-  --color11-10: #f0c233;
-  --color11-20: #f4cc53;
-  --color11-30: #f7d673;
-  --color11-40: #fae093;
-  --color11-50: #fdeaaf;
-  --color11-60: #fffbdf;
+  --color11-10: #ffc46f;
+  --color11-20: #ffcf85;
+  --color11-30: #ffda9b;
+  --color11-40: #ffe5b1;
+  --color11-50: #fff0c7;
+  --color11-60: #fff8e5;
 
-  --color12: #1f2937;
-  --color12-10: #374151;
+  --color12: #292932;
+  --color12-10: #34343d;
 
-  --degrade1: linear-gradient(to left, var(--pba-primary), #7a0a11);
-  --degrade2: linear-gradient(to right, #141414, #0a0a0a);
+  --degrade1: linear-gradient(to left, var(--pba-primary-dim), #13131b);
+  --degrade2: linear-gradient(to right, #1f1f27, #13131b);
 
-  /* Superficies */
-  --pba-header-bg: #141414;
-  --pba-bg-pagina: #0a0a0a;
-  --pba-texto-menu: #ededed;
-  --pba-sombra-boton: 0px 8px 16px rgba(0, 0, 0, 0.5);
+  --pba-header-bg: #1f1f27;
+  --pba-bg-pagina: #13131b;
+  --pba-texto-menu: #e4e1ed;
+  --pba-sombra-boton: 0px 8px 16px rgba(0, 0, 0, 0.45);
 }
 
-/* Jerarquía tipográfica base */
+/* Jerarquía tipográfica base (Inter) */
 body {
   font-family: var(--font-primary);
   font-size: 16px;
-  line-height: 1.5;
-  color: #ededed;
+  line-height: 1.6;
+  color: #e4e1ed;
   background-color: var(--pba-bg-pagina);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -157,28 +153,40 @@ body {
 h1,
 h2 {
   font-family: var(--font-primary);
-  font-weight: 700;
-  color: #ededed;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: #e4e1ed;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
 }
 
 h3 {
   font-family: var(--font-primary);
   font-weight: 600;
-  color: #ededed;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  color: #e4e1ed;
 }
 
 h4 {
   font-family: var(--font-primary);
   font-weight: 600;
-  color: #ededed;
+  color: #e4e1ed;
 }
 
 p {
   font-family: var(--font-primary);
   font-size: 1rem;
   line-height: 1.6;
-  color: #ededed;
+  color: #e4e1ed;
 }
 
 a {
@@ -224,7 +232,7 @@ li {
 }
 
 .pba-btn-sombra {
-  background: #141414;
+  background: #1f1f27;
   border: 1px solid var(--pba-gris-claro);
   box-shadow: var(--pba-sombra-boton);
 }
