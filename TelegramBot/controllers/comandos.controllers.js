@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const ComandoMd = require("../models/model.comando.js");
 const MensajesMd = require("../models/model.mensajes.js");
 const temaMd = require("../models/model.tema.js");
@@ -6,6 +7,11 @@ const BienvenidaMd = require("../models/model.bienvenida.js")
 const EstadisticaMd = require("../models/model.estadisticas.js");
 
 const TELEGRAM_MAX_MESSAGE_LENGTH = 4096;
+
+/** Filas activas: en BD legacy `eliminado` puede ser null */
+function whereActivo() {
+  return { [Op.or]: [{ eliminado: 0 }, { eliminado: null }] };
+}
 
 function dividirTextoParaTelegram(texto, maxLength = TELEGRAM_MAX_MESSAGE_LENGTH) {
   if (!texto || texto.length <= maxLength) {
@@ -75,9 +81,7 @@ async function setearComandos(bot) {
   try {
     // Obtener todos los comandos de la base de datos
     const commands = await ComandoMd.findAll({
-      where: {
-        eliminado: 0
-      }
+      where: whereActivo(),
     });
 
     // Configurar cada comando individualmente
@@ -126,9 +130,7 @@ async function comandoStart(ctx, historialUsuario) {
       historialUsuario[usuarioId] = [];
       // Obtener todos los comandos de la base de datos
       const commands = await ComandoMd.findAll({
-        where: {
-          eliminado: 0
-        }
+        where: whereActivo(),
       });
 
       const bienve = await BienvenidaMd.findAll({
@@ -164,7 +166,15 @@ async function comandosDinamicos(ctx, historialUsuario, comando = "", bot) {
 
 
     const dbCommand = await ComandoMd.findOne({
-      where: { titulo: comandoNormalizado, eliminado: 0 },
+      where: {
+        [Op.and]: [
+          whereActivo(),
+          ComandoMd.sequelize.where(
+            ComandoMd.sequelize.fn("LOWER", ComandoMd.sequelize.col("titulo")),
+            comandoNormalizado
+          ),
+        ],
+      },
     });
     const botones = [
       [
@@ -179,7 +189,9 @@ async function comandosDinamicos(ctx, historialUsuario, comando = "", bot) {
 
     if (dbCommand) {
       const opciones = await temaMd.findAll({
-        where: { idmenu: dbCommand.id, eliminado: 0 },
+        where: {
+          [Op.and]: [{ idmenu: dbCommand.id }, whereActivo()],
+        },
       });
 
       if (opciones.length > 0) {
@@ -203,17 +215,30 @@ async function comandosDinamicos(ctx, historialUsuario, comando = "", bot) {
         
         await guardarHistorialEnBaseDeDatos(usuarioId, comandoObtenido,false,comandoNormalizado,"menu",dbCommand.id);
       } else {
+        console.warn(
+          `[comandosDinamicos] Menú "${dbCommand.titulo}" (id=${dbCommand.id}) sin temas activos para /${comandoNormalizado}`
+        );
         await ctx.reply(`No hay opciones disponibles para ${comandoObtenido}.`);
       }
     } else {
       const dbTema = await temaMd.findOne({
-        where: { comando_tema: comandoNormalizado, eliminado: 0 },
+        where: {
+          [Op.and]: [
+            whereActivo(),
+            temaMd.sequelize.where(
+              temaMd.sequelize.fn("LOWER", temaMd.sequelize.col("comando_tema")),
+              comandoNormalizado
+            ),
+          ],
+        },
       });
       mostrarHistorial(usuarioId, historialUsuario);
       if (dbTema) {
         await guardarHistorialEnBaseDeDatos(usuarioId, comandoObtenido, false, dbTema.tema, "tema",dbTema.idmenu);
         const dbMensajes = await MensajesMd.findAll({
-          where: { idtema: dbTema.id, eliminado: 0 },
+          where: {
+            [Op.and]: [{ idtema: dbTema.id }, whereActivo()],
+          },
         });
 
         let response = "";

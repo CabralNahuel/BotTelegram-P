@@ -15,7 +15,13 @@ const ComandoMd = db.define(
         type: DataTypes.STRING,
         field: "titulo",
         allowNull: true,
-      }  },
+      },
+      eliminado: {
+        type: DataTypes.INTEGER,
+        field: "eliminado",
+        allowNull: true,
+      },
+    },
     {
       paranoid: true,
       freezeTableName: true,
