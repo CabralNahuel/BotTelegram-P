@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 /** Etiquetas que el panel permite en mensajes enriquecidos (Telegram / editor). */
 const ALLOWED_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'div', 'span', 'a'];
 
-const SANITIZE_HTML: DOMPurify.Config = {
+const SANITIZE_HTML = {
   ALLOWED_TAGS,
   ALLOWED_ATTR: ['href', 'target', 'rel'],
 };
@@ -22,7 +22,7 @@ export function sanitizeHtml(dirty: string): string {
  */
 export function htmlToPlainText(html: string): string {
   if (typeof document === 'undefined') {
-    return DOMPurify.sanitize(html ?? '', { ALLOWED_TAGS: [] });
+    return DOMPurify.sanitize(html ?? '', { ALLOWED_TAGS: [] as string[] });
   }
   const div = document.createElement('div');
   div.innerHTML = sanitizeHtml(html ?? '');
