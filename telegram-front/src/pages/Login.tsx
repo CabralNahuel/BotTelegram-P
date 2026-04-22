@@ -89,7 +89,18 @@ const Login: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: "linear-gradient(165deg, #417099 0%, #00AEC3 35%, #eaf4f5 65%, #ffffff 100%)"  }}
+        background: 'radial-gradient(ellipse at center, #141414 0%, #0A0A0A 70%, #000000 100%)',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'linear-gradient(rgba(229, 9, 20, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(229, 9, 20, 0.04) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          pointerEvents: 'none',
+        },
+      }}
     >
       <Box
         sx={{
@@ -108,24 +119,39 @@ const Login: React.FC = () => {
         sx={{
           width: '100%',
           maxWidth: 420,
-          p: { xs: 2, sm: 3 },
+          p: { xs: 2.5, sm: 3.5 },
           bgcolor: 'var(--pba-header-bg)',
+          border: '1px solid var(--pba-gris-claro)',
           borderRadius: 2,
           boxShadow: 'var(--pba-sombra-boton)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <Typography
           component="h1"
           variant="h5"
           sx={{
-            color: 'var(--pba-primary)',
+            color: '#EDEDED',
             textAlign: 'center',
             mb: 3,
             fontFamily: 'var(--font-primary)',
-            fontWeight: 800,
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            fontSize: '1rem',
+            '&::after': {
+              content: '"_"',
+              color: 'var(--pba-primary)',
+              animation: 'blink 1.2s infinite',
+            },
+            '@keyframes blink': {
+              '0%, 50%': { opacity: 1 },
+              '51%, 100%': { opacity: 0 },
+            },
           }}
         >
-          Telegram Bot
+          Telegram Bot Admin
         </Typography>
         <Grid container spacing={2} component="form" onSubmit={handleSubmit}>
           {cargando && (

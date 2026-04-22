@@ -1,79 +1,136 @@
 import { createTheme } from '@mui/material/styles';
 
 /**
- * Tema Material UI alineado al sistema de diseño PBA (gba.gob.ar).
- * Colores y tipografía: manual institucional.
+ * Tema CN-DEV: minimal, dark, técnico. Negro profundo + acento rojo.
+ * Tipografía monoespaciada para detalles técnicos, sans-serif para UI.
  */
 export const pbaTheme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: '#009AAE',
+      main: '#E50914',
+      light: '#FF1E2D',
+      dark: '#B3060F',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#414042',
-      contrastText: '#FFFFFF',
+      main: '#E5E5E5',
+      contrastText: '#0A0A0A',
     },
-    error: { main: '#BE1717' },
-    success: { main: '#22a954' },
-    info: { main: '#417099' },
-    warning: { main: '#ebb813' },
+    error: { main: '#E50914' },
+    success: { main: '#22c55e' },
+    info: { main: '#9CA3AF' },
+    warning: { main: '#F59E0B' },
     background: {
-      default: '#F0F0F0',
-      paper: '#FFFFFF',
+      default: '#0A0A0A',
+      paper: '#141414',
     },
     text: {
-      primary: '#000000',
-      secondary: '#414042',
+      primary: '#EDEDED',
+      secondary: '#9CA3AF',
+      disabled: '#4B5563',
     },
-    divider: '#C0C0C0',
+    divider: '#262626',
+    action: {
+      hover: 'rgba(229, 9, 20, 0.08)',
+      selected: 'rgba(229, 9, 20, 0.16)',
+    },
   },
   typography: {
-    fontFamily: '"Encode Sans", "Helvetica Neue", Arial, sans-serif',
-    h1: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 800, fontSize: '2rem' },
-    h2: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 700, fontSize: '1.75rem' },
-    h3: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 600, fontSize: '1.5rem' },
-    h4: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 600, fontSize: '1.25rem' },
-    h5: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 600 },
-    h6: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 600 },
-    body1: { fontFamily: '"Encode Sans", sans-serif', fontSize: '1rem', lineHeight: 1.5 },
-    body2: { fontFamily: '"Encode Sans", sans-serif', fontSize: '0.9375rem', lineHeight: 1.5 },
-    button: { fontFamily: '"Encode Sans", sans-serif', fontWeight: 600, textTransform: 'none' },
+    fontFamily: '"Inter", "Helvetica Neue", Arial, sans-serif',
+    h1: { fontWeight: 700, fontSize: '2rem', letterSpacing: '-0.02em' },
+    h2: { fontWeight: 700, fontSize: '1.75rem', letterSpacing: '-0.02em' },
+    h3: { fontWeight: 600, fontSize: '1.5rem', letterSpacing: '-0.01em' },
+    h4: { fontWeight: 600, fontSize: '1.25rem' },
+    h5: { fontWeight: 600 },
+    h6: { fontWeight: 600 },
+    body1: { fontSize: '1rem', lineHeight: 1.6 },
+    body2: { fontSize: '0.9375rem', lineHeight: 1.6, color: '#9CA3AF' },
+    button: { fontWeight: 600, textTransform: 'none', letterSpacing: '0.01em' },
   },
-  shape: { borderRadius: 8 },
+  shape: { borderRadius: 6 },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          fontFamily: '"Encode Sans", sans-serif',
+          fontFamily: '"Inter", sans-serif',
+          backgroundColor: '#0A0A0A',
+          color: '#EDEDED',
         },
         'a:focus-visible, button:focus-visible': {
-          outline: '2px solid #009AAE',
+          outline: '2px solid #E50914',
           outlineOffset: '2px',
+        },
+        '*::-webkit-scrollbar': { width: '8px', height: '8px' },
+        '*::-webkit-scrollbar-track': { background: '#141414' },
+        '*::-webkit-scrollbar-thumb': { background: '#333', borderRadius: '4px' },
+        '*::-webkit-scrollbar-thumb:hover': { background: '#E50914' },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          backgroundColor: '#141414',
+          border: '1px solid #262626',
         },
       },
     },
     MuiButton: {
-      defaultProps: { disableElevation: false },
+      defaultProps: { disableElevation: true },
       styleOverrides: {
         root: {
-          borderRadius: '8px',
+          borderRadius: '6px',
+          fontWeight: 600,
         },
         containedPrimary: {
-          boxShadow: '0px 4px 8px rgba(65, 64, 66, 0.2)',
+          backgroundColor: '#E50914',
+          color: '#FFFFFF',
           '&:hover': {
-            boxShadow: '0px 6px 12px rgba(65, 64, 66, 0.25)',
+            backgroundColor: '#FF1E2D',
           },
         },
         outlined: {
-          backgroundColor: '#FFFFFF',
-          boxShadow: '0px 4px 6px rgba(65, 64, 66, 0.12)',
-          borderColor: '#C0C0C0',
+          backgroundColor: 'transparent',
+          borderColor: '#333',
+          color: '#EDEDED',
           '&:hover': {
-            borderColor: '#009AAE',
-            backgroundColor: '#FFFFFF',
+            borderColor: '#E50914',
+            backgroundColor: 'rgba(229, 9, 20, 0.08)',
           },
         },
+        text: {
+          color: '#EDEDED',
+          '&:hover': {
+            backgroundColor: 'rgba(229, 9, 20, 0.08)',
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': { borderColor: '#333' },
+            '&:hover fieldset': { borderColor: '#525252' },
+            '&.Mui-focused fieldset': { borderColor: '#E50914' },
+          },
+          '& .MuiInputLabel-root.Mui-focused': { color: '#E50914' },
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#0A0A0A',
+          borderBottom: '1px solid #262626',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: { borderColor: '#262626' },
+        head: { backgroundColor: '#1A1A1A', fontWeight: 600 },
       },
     },
   },

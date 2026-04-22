@@ -3,11 +3,25 @@ import logoPrincipal from './logoPrincipal.png';
 
 const Logo = () => {
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        
+      }}
+    >
       <img
         src={logoPrincipal}
-        alt="Logo Gobierno de la Provincia de Buenos Aires"
-        style={{ minWidth: '100px' }}
+        alt="CN-DEV"
+        style={{
+          maxWidth: '320px',
+          width: '100%',
+          height: 'auto',
+          objectFit: 'contain',
+          borderRadius: 10,
+        }}
       />
     </Box>
   );

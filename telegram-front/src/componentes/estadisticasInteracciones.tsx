@@ -243,7 +243,7 @@ function normalizarComando(c: string): string {
 
 function esComandoTema(comando: string): boolean {
   const sinSlash = comando.trim().replace(/^\//, '');
-  return /^mcp/i.test(sinSlash);
+  return /^cnd/i.test(sinSlash);
 }
 
 function agregarClics(

@@ -1,73 +1,75 @@
-/* Encode Sans (principal) + Roboto (secundaria) — manual PBA */
-@import url("https://fonts.googleapis.com/css2?family=Encode+Sans:wght@300;400;500;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+/* Inter (UI) + JetBrains Mono (monoespaciada para acentos técnicos) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap");
 
-/* ========== SISTEMA DE DISEÑO PBA (Provincia de Buenos Aires) ========== */
+/* ========== SISTEMA DE DISEÑO CN-DEV (tema oscuro minimal) ========== */
 :root {
-  --font-primary: "Encode Sans", "Helvetica Neue", Arial, sans-serif;
-  --font-secondary: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --font-primary: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-secondary: "JetBrains Mono", "Menlo", monospace;
 
-  /* Identidad — primario / secundario institucional */
-  --pba-primary: #009aae;
-  --pba-secondary: #414042;
-  --pba-celeste: #00aec3;
-  --pba-azul-isologo: #417099;
+  /* Identidad — acento CN-DEV rojo */
+  --pba-primary: #e50914;
+  --pba-primary-hover: #ff1e2d;
+  --pba-primary-dim: #b3060f;
+  --pba-secondary: #9ca3af;
+  --pba-celeste: #e50914;
+  --pba-azul-isologo: #9ca3af;
 
-  /* Isologo */
-  --pba-rosa: #e81f76;
-  --pba-azul: #417099;
-  --pba-celeste-logo: #00aec3;
+  /* Legacy isologo (mantenidos para compat, remapeados) */
+  --pba-rosa: #e50914;
+  --pba-azul: #9ca3af;
+  --pba-celeste-logo: #e50914;
 
-  /* Neutros */
-  --pba-negro: #000000;
-  --pba-gris-medio: #838383;
-  --pba-gris-claro: #c0c0c0;
-  --pba-gris-muy-claro: #f0f0f0;
-  --pba-footer-bg: #e6e6e6;
+  /* Neutros oscuros */
+  --pba-negro: #0a0a0a;
+  --pba-gris-medio: #6b7280;
+  --pba-gris-claro: #262626;
+  --pba-gris-muy-claro: #141414;
+  --pba-footer-bg: #0a0a0a;
 
-  /* Acentos (uso puntual) */
-  --pba-rojo: #be1717;
-  --pba-violeta: #592673;
-  --pba-azul-oscuro: #1f3464;
-  --pba-verde: #22a954;
-  --pba-amarillo: #ebb813;
+  /* Acentos */
+  --pba-rojo: #e50914;
+  --pba-violeta: #a78bfa;
+  --pba-azul-oscuro: #1e293b;
+  --pba-verde: #22c55e;
+  --pba-amarillo: #f59e0b;
 
-  /* Gradientes derivados (limitado) */
-  --pba-gradiente-suave: linear-gradient(180deg, #cae7ea 0%, #a3d8e7 50%, #74c9e3 100%);
-  --pba-banner-suave: #b5e4e5;
+  /* Gradientes */
+  --pba-gradiente-suave: linear-gradient(180deg, #0a0a0a 0%, #141414 100%);
+  --pba-banner-suave: #141414;
 
-  /* Compatibilidad con código existente (--colorN) */
+  /* Compatibilidad legacy (--colorN) remapeados al nuevo esquema */
   --color1: var(--pba-primary);
-  --color1-10: #1aa3b5;
-  --color1-20: #33adc0;
-  --color1-30: #4db7cb;
-  --color1-40: #66c1d5;
+  --color1-10: #eb3b45;
+  --color1-20: #ef5c64;
+  --color1-30: #f27d83;
+  --color1-40: #f59ea2;
 
   --color2: var(--pba-gris-medio);
-  --color2-10: #909090;
-  --color2-20: #9d9d9d;
-  --color2-30: #aaaaaa;
-  --color2-40: #b7b7b7;
-  --color2-50: #c4c4c4;
+  --color2-10: #7a8491;
+  --color2-20: #8a94a0;
+  --color2-30: #9aa3af;
+  --color2-40: #a9b2bd;
+  --color2-50: #b9c1ca;
   --color2-60: var(--pba-gris-claro);
 
-  --color3: var(--pba-negro);
-  --color3-10: #1a1a1a;
-  --color3-20: #333333;
-  --color3-30: #4d4d4d;
-  --color3-80: #cccccc;
-  --color3-90: #e6e6e6;
+  --color3: #ededed;
+  --color3-10: #d4d4d4;
+  --color3-20: #a3a3a3;
+  --color3-30: #737373;
+  --color3-80: #262626;
+  --color3-90: #141414;
 
-  --color4: var(--pba-rosa);
-  --color4-10: #eb3c8a;
-  --color4-20: #ee599e;
-  --color4-30: #f276b2;
-  --color4-40: #f593c5;
-  --color4-50: #f8aec9;
-  --color4-60: #fbc8e1;
-  --color4-70: #fdd3e7;
-  --color4-80: #ffdde3;
-  --color4-90: #ffe7f1;
+  --color4: var(--pba-primary);
+  --color4-10: #eb3b45;
+  --color4-20: #ef5c64;
+  --color4-30: #f27d83;
+  --color4-40: #f59ea2;
+  --color4-50: #f8bec1;
+  --color4-60: #fbd0d3;
+  --color4-70: #fcd9db;
+  --color4-80: #fde2e4;
+  --color4-90: #fee9eb;
 
   --color5: var(--pba-rojo);
   --color5-10: #cb3939;
@@ -81,21 +83,21 @@
   --color5-90: #fff2f2;
 
   --color6: var(--pba-violeta);
-  --color6-10: #6c3f86;
-  --color6-20: #80589a;
-  --color6-30: #9472ad;
-  --color6-40: #a78bc0;
-  --color6-50: #bba4d3;
-  --color6-60: #cebee6;
-  --color6-70: #e1d7f9;
-  --color6-80: #ece3ff;
-  --color6-90: #f5f0ff;
+  --color6-10: #b19cfb;
+  --color6-20: #baadfc;
+  --color6-30: #c3befd;
+  --color6-40: #ccceff;
+  --color6-50: #d5dfff;
+  --color6-60: #deeeff;
+  --color6-70: #e7f5ff;
+  --color6-80: #eff9ff;
+  --color6-90: #f7fcff;
 
-  --color7: #74c9e3;
-  --color7-10: #8cd2e9;
-  --color7-20: #a3dbea;
-  --color7-30: #bbe4ef;
-  --color7-40: #d2edfb;
+  --color7: #6b7280;
+  --color7-10: #7a8491;
+  --color7-20: #8a94a0;
+  --color7-30: #9aa3af;
+  --color7-40: #a9b2bd;
 
   --color8: var(--pba-verde);
   --color8-10: #3dbd70;
@@ -114,11 +116,11 @@
   --color9-60: #a9adff;
   --color9-70: #c0c2ff;
 
-  --color10: #a3d8e7;
-  --color10-10: #b5e1ed;
-  --color10-20: #c6ebf3;
-  --color10-30: #d7f4f9;
-  --color10-40: #e8fdff;
+  --color10: #374151;
+  --color10-10: #475569;
+  --color10-20: #64748b;
+  --color10-30: #94a3b8;
+  --color10-40: #cbd5e1;
 
   --color11: var(--pba-amarillo);
   --color11-10: #f0c233;
@@ -128,17 +130,17 @@
   --color11-50: #fdeaaf;
   --color11-60: #fffbdf;
 
-  --color12: #cae7ea;
-  --color12-10: #d5eced;
+  --color12: #1f2937;
+  --color12-10: #374151;
 
-  --degrade1: linear-gradient(to left, var(--color7), var(--color10));
-  --degrade2: linear-gradient(to right, var(--color6), var(--color9));
+  --degrade1: linear-gradient(to left, var(--pba-primary), #7a0a11);
+  --degrade2: linear-gradient(to right, #141414, #0a0a0a);
 
   /* Superficies */
-  --pba-header-bg: #ffffff;
-  --pba-bg-pagina: var(--pba-gris-muy-claro);
-  --pba-texto-menu: var(--pba-secondary);
-  --pba-sombra-boton: 0px 10px 5px rgba(65, 64, 66, 0.18);
+  --pba-header-bg: #141414;
+  --pba-bg-pagina: #0a0a0a;
+  --pba-texto-menu: #ededed;
+  --pba-sombra-boton: 0px 8px 16px rgba(0, 0, 0, 0.5);
 }
 
 /* Jerarquía tipográfica base */
@@ -146,45 +148,48 @@ body {
   font-family: var(--font-primary);
   font-size: 16px;
   line-height: 1.5;
-  color: var(--pba-negro);
+  color: #ededed;
   background-color: var(--pba-bg-pagina);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
 h2 {
   font-family: var(--font-primary);
-  font-weight: 800;
-  color: var(--pba-primary);
+  font-weight: 700;
+  color: #ededed;
   letter-spacing: -0.02em;
 }
 
 h3 {
   font-family: var(--font-primary);
   font-weight: 600;
-  color: var(--pba-secondary);
+  color: #ededed;
 }
 
 h4 {
   font-family: var(--font-primary);
   font-weight: 600;
-  color: var(--pba-secondary);
+  color: #ededed;
 }
 
 p {
   font-family: var(--font-primary);
   font-size: 1rem;
-  line-height: 1.5;
-  color: var(--pba-negro);
+  line-height: 1.6;
+  color: #ededed;
 }
 
 a {
-  color: var(--pba-secondary);
-  text-decoration: underline;
+  color: var(--pba-primary);
+  text-decoration: none;
   text-underline-offset: 2px;
 }
 
 a:hover {
-  color: var(--pba-primary);
+  color: var(--pba-primary-hover);
+  text-decoration: underline;
 }
 
 ul,
@@ -215,11 +220,11 @@ li {
 
 .TipografiaEstadisticaVacia {
   font-family: var(--font-primary);
-  color: var(--pba-rojo);
+  color: var(--pba-primary);
 }
 
-/* Botón institucional (tarjeta / CTA) */
 .pba-btn-sombra {
-  background: #ffffff;
+  background: #141414;
+  border: 1px solid var(--pba-gris-claro);
   box-shadow: var(--pba-sombra-boton);
 }

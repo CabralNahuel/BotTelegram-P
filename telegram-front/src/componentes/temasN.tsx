@@ -130,7 +130,7 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
   // Función para manejar el guardado de cambios en una fila
   const manejarGuardar = async () => {
     if (filaActual) {
-      const comando_tema = `Mcp${obtenerIniciales(texto)}`;
+      const comando_tema = `Cnd${obtenerIniciales(texto)}`;
       let contador = 0;
 
 
@@ -163,7 +163,7 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
         console.error('Error al actualizar el tema:', error);
       }
     } else {
-      const comando_tema = `Mcp${obtenerIniciales(texto)}`;
+      const comando_tema = `Cnd${obtenerIniciales(texto)}`;
       let contador = 0;
 
 
@@ -218,7 +218,7 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
   // Función para agregar un nuevo tema
 
   const manejarAgregarTema = async (titulo: string) => {
-    const comando_tema = `Mcp${obtenerIniciales(titulo)}`;
+    const comando_tema = `Cnd${obtenerIniciales(titulo)}`;
     let contador = 0;
     let comando_tema_modificado = comando_tema;
     while (filas.some(fila => fila.comando_tema === comando_tema_modificado)) {
