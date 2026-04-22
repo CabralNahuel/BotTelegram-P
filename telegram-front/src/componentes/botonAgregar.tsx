@@ -12,6 +12,11 @@ interface BotonAgregarProps {
   mostrarEstilos?: boolean;
 }
 
+/** Alto inicial del área editable y del botón enviar (el editor puede crecer; el botón no). */
+const EDITOR_ROW_HEIGHT_PX = 48;
+/** Tope de crecimiento visual del editor antes de activar scroll interno. */
+const EDITOR_MAX_HEIGHT_PX = 176;
+
 const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOption = false, agregarEditar, mostrarEstilos = false }) => {
   const [nuevoNombre, setNuevoNombre] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState<File | undefined>(undefined);
@@ -78,7 +83,20 @@ const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOpti
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'row', alignItems: mostrarEstilos ? 'center' : 'baseline', width: '100%', minWidth: 0, gap: 1,marginBottom:'2rem'}}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        flexWrap: 'nowrap',
+        width: '100%',
+        minWidth: 0,
+        gap: 2,
+        mb: { xs: 1, sm: 2 },
+      }}
+    >
       <Box sx={{ flex: '1 1 70%', minWidth: 0 }}>
         {mostrarEstilos && (
           <Box sx={{ p: 1, display: "flex", padding: "0", gap: 1 }}>
@@ -87,38 +105,51 @@ const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOpti
             <Button className='BotonAgregar__botonesDeEstilos' onClick={handleLink} variant="outlined">Link</Button>
           </Box>
         )}
-           <Box
+        <Box
           ref={editorRef}
           contentEditable
-          sx={{
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            padding: '8px',
-            minHeight: '4vh',
-            width: "100%",
+          sx={(theme) => ({
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: 1,
+            px: 1.75,
+            py: 1,
+            minHeight: EDITOR_ROW_HEIGHT_PX,
+            maxHeight: EDITOR_MAX_HEIGHT_PX,
+            width: '100%',
             minWidth: 0,
-            maxWidth: "100%",
+            maxWidth: '100%',
             boxSizing: 'border-box',
             overflowX: 'hidden',
             overflowY: 'auto',
             overflowWrap: 'anywhere',
             wordBreak: 'break-word',
             whiteSpace: 'pre-wrap',
+            bgcolor: theme.palette.mode === 'dark' ? 'background.default' : 'background.paper',
             '&:focus': {
               outline: 'none',
-              borderColor: 'var(--color1)'
+              borderColor: 'primary.main',
             },
-            flexGrow: 1,
-            flexShrink: 1,
-            flexBasis: 'auto',
-          }}
+          })}
           onInput={handleTextChange} // Actualiza el estado con el contenido del editor
           onPaste={handlePaste} // Intercepta el evento de pegado
           onKeyDown={handleEditorKeyDown}
         />
       </Box>
 
-      <Box sx={{ flex: '0 1 30%', minWidth: 0, display: 'flex', alignItems: 'stretch', flexDirection: 'column', justifyContent: 'center', gap: 1, mt: mostrarEstilos ? 0 : 2 }}>
+      <Box
+        sx={{
+          flex: '0 0 auto',
+          minWidth: { xs: 88, sm: 100 },
+          maxWidth: { xs: 120, sm: 140 },
+          display: 'flex',
+          alignItems: 'flex-start',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          gap: 1,
+          /* Con barra de estilos, alinear la columna del botón con el editor (no con la toolbar). */
+          mt: mostrarEstilos ? '44px' : 0,
+        }}
+      >
         {showPhotoOption && (
           <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
             <input
@@ -145,7 +176,18 @@ const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOpti
         <Button
           variant="contained"
           type="submit"
-          sx={{ fontFamily: 'var(--font-secondary)', background: 'var(--color1)', width: '100%', maxHeight: "48px" }}
+          sx={{
+            fontFamily: 'var(--font-primary)',
+            width: '100%',
+            height: EDITOR_ROW_HEIGHT_PX,
+            minHeight: EDITOR_ROW_HEIGHT_PX,
+            maxHeight: EDITOR_ROW_HEIGHT_PX,
+            alignSelf: 'stretch',
+            flexShrink: 0,
+            px: 1.5,
+            py: 0,
+            fontSize: '0.875rem',
+          }}
           onClick={handleAdd}
           disabled={nuevoNombre.trim() === ''}
         >

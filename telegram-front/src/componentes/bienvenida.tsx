@@ -1,9 +1,58 @@
 import * as React from 'react';
-import { Stack, Box, Typography } from '@mui/material';
-import Card from '@mui/material/Card';
+import { Stack, Box, Typography, Container, Card } from '@mui/material';
 import Cargando from './cargando';
 import BotonAgregar from './botonAgregar';
 import { apiFetch } from '../api/client';
+
+const tituloBienvenidaSx = {
+  flexShrink: 0,
+  width: '100%',
+  maxWidth: 720,
+  textAlign: 'center',
+  fontFamily: 'var(--font-primary)',
+  fontWeight: 600,
+  color: 'primary.main',
+  fontSize: { xs: '1.75rem', sm: '2.125rem' },
+  lineHeight: 1.2,
+  letterSpacing: '-0.01em',
+  mt: { xs: 1, sm: 1.5 },
+  mb: { xs: 2, sm: 2.5 },
+  px: { xs: 1, sm: 0 },
+} as const;
+
+function LayoutBienvenida({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        flex: 1,
+        minHeight: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        alignSelf: 'stretch',
+      }}
+    >
+      <Typography component="h2" variant="h2" sx={{...tituloBienvenidaSx, pt: '2rem'}}>
+        Bienvenida
+      </Typography>
+      <Box
+        sx={{
+          flex: 1,
+          width: '100%',
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          px: { xs: 0, sm: 1 },
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+}
 
 export default function Bienvenida() {
   const [bienvenida, setBienvenida] = React.useState('');
@@ -57,41 +106,54 @@ export default function Bienvenida() {
 
   if (cargando) {
     return (
-      <Box sx={{ display: 'grid', maxWidth: '550px' }}>
-        <Cargando />
-      </Box>
+      <LayoutBienvenida>
+        <Container maxWidth="sm" sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+          <Cargando />
+        </Container>
+      </LayoutBienvenida>
     );
   }
 
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'auto',
-        paddingTop: 10,
-        paddingBottom: 1,
-        height: '100%',
-        width: '80%',
-        maxWidth: '100%',
-        boxShadow: 'none',
-        background: 'transparent',
-      }}
-    >
-      <Stack spacing={4} textAlign="center" alignItems="stretch" width="100%" height="100%" justifyContent="space-between" gap={2}>
-        <Box marginTop={'10rem'}>
-          <Typography
-            textAlign="center"
-            sx={{ fontFamily: 'var(--font-secondary)', color: 'var(--color3)', overflowWrap: 'anywhere' }}
-            fontWeight={400}
-          >
-            {bienvenida}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', width: '100%', minWidth: 0, gap: 2, alignItems: 'stretch' }}>
-          <BotonAgregar onAdd={enviar} label="Bienvenida" showPhotoOption={false} agregarEditar="Editar" />
-        </Box>
-      </Stack>
-    </Card>
+    <LayoutBienvenida>
+      <Container maxWidth="sm" sx={{ width: '100%', px: { xs: 2, sm: 3 } }}>
+        <Card
+          elevation={0}
+          sx={{
+            width: '100%',
+            maxWidth: 640,
+            mx: 'auto',
+            p: { xs: 2.5, sm: 3 },
+            maxHeight: { xs: 'calc(100vh - 250px)', sm: 'calc(100vh - 280px)' },
+            overflow: 'auto',
+            border: '1px solid',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxSizing: 'border-box',
+          }}
+        >
+          <Stack spacing={3} alignItems="stretch">
+            <Typography
+              component="p"
+              variant="body1"
+              textAlign="center"
+              sx={{
+                fontFamily: 'var(--font-primary)',
+                fontWeight: 400,
+                color: 'text.primary',
+                lineHeight: 1.6,
+                overflowWrap: 'anywhere',
+              }}
+            >
+              {bienvenida}
+            </Typography>
+            <Box sx={{ width: '100%', minWidth: 0 }}>
+              <BotonAgregar onAdd={enviar} label="Bienvenida" showPhotoOption={false} agregarEditar="Editar" />
+            </Box>
+          </Stack>
+        </Card>
+      </Container>
+    </LayoutBienvenida>
   );
 }

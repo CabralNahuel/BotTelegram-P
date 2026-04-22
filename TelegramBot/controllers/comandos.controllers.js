@@ -160,10 +160,11 @@ async function comandosDinamicos(ctx, historialUsuario, comando = "", bot) {
   try {
     const usuarioId = ctx.from.id;
     const comandoObtenido = comando || ctx.message.text;
+    const comandoNormalizado = (comandoObtenido || "").trim().replace(/^\/+/, "").toLowerCase();
 
 
     const dbCommand = await ComandoMd.findOne({
-      where: { titulo: comandoObtenido.slice(1), eliminado: 0 },
+      where: { titulo: comandoNormalizado, eliminado: 0 },
     });
     const botones = [
       [
@@ -200,20 +201,17 @@ async function comandosDinamicos(ctx, historialUsuario, comando = "", bot) {
         });
         mostrarHistorial(usuarioId, historialUsuario);
         
-        await guardarHistorialEnBaseDeDatos(usuarioId, comandoObtenido,false,comandoObtenido.slice(1),"menu",dbCommand.id);
+        await guardarHistorialEnBaseDeDatos(usuarioId, comandoObtenido,false,comandoNormalizado,"menu",dbCommand.id);
       } else {
         await ctx.reply(`No hay opciones disponibles para ${comandoObtenido}.`);
       }
     } else {
       const dbTema = await temaMd.findOne({
-        where: { comando_tema: comandoObtenido.slice(1), eliminado: 0 },
+        where: { comando_tema: comandoNormalizado, eliminado: 0 },
       });
       mostrarHistorial(usuarioId, historialUsuario);
-      await guardarHistorialEnBaseDeDatos(usuarioId, comandoObtenido, false, dbTema.tema, "tema",dbTema.idmenu);
-
-
-
       if (dbTema) {
+        await guardarHistorialEnBaseDeDatos(usuarioId, comandoObtenido, false, dbTema.tema, "tema",dbTema.idmenu);
         const dbMensajes = await MensajesMd.findAll({
           where: { idtema: dbTema.id, eliminado: 0 },
         });
@@ -235,7 +233,11 @@ async function comandosDinamicos(ctx, historialUsuario, comando = "", bot) {
             inline_keyboard: botones
           }
         });
-
+      } else {
+        await responderTextoLargo(
+          ctx,
+          `No encontré el comando ${comandoObtenido}. Probá con /start para ver el menú principal.`
+        );
       }
 
     }

@@ -2,91 +2,104 @@ import React from 'react';
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 interface ListButtonProps {
-    text: string;
-    index: number;
-    open: boolean;
-    icon: React.ReactNode;
-    onClick: () => void;
-    color: string;
+  text: string;
+  /** Conservado por compatibilidad con otras pantallas que reutilizan el componente. */
+  index?: number;
+  open: boolean;
+  icon: React.ReactNode;
+  onClick: () => void;
+  color: string;
 }
 
 const BotonesDrawer: React.FC<ListButtonProps> = ({ text, open, icon, onClick, color }) => {
-    return (
-        <ListItem
-            sx={{
-                minWidth: open ? 'auto' : '50px',
-                transition: (theme) => theme.transitions.create('min-width', {
-                    easing: theme.transitions.easing.sharp,
-                    duration: theme.transitions.duration.leavingScreen,
-                }),
-                width: '100%',
-                textAlign: 'center',
-                py: 0.5,
-                justifyContent: 'center',
-            }}
-            key={text}
-            disablePadding
+  return (
+    <ListItem
+      disablePadding
+      sx={{
+        width: '100%',
+        minWidth: 0,
+        height: '100%',
+        display: 'flex',
+        alignItems: 'stretch',
+        justifyContent: 'center',
+      }}
+    >
+      <ListItemButton
+        onClick={onClick}
+        sx={{
+          width: '100%',
+          maxWidth: { xs: '100%', md: 200, lg: 220 },
+          height: '100%',
+          minHeight: 0,
+          aspectRatio: 1,
+          textAlign: 'center',
+          mx: 'auto',
+          display: 'grid',
+          gridAutoFlow: 'row',
+          alignContent: 'center',
+          justifyContent: 'center',
+          rowGap: 1,
+          px: 1.5,
+          py: 1.5,
+          borderRadius: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+          bgcolor: 'background.default',
+          boxSizing: 'border-box',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+          '&:hover': {
+            borderColor: 'primary.main',
+            bgcolor: (theme) => theme.palette.action.hover,
+            '& .MuiListItemIcon-root': {
+              color: `${color} !important`,
+            },
+          },
+          '&:focus-visible': {
+            outline: '2px solid',
+            outlineColor: 'primary.main',
+            outlineOffset: 2,
+          },
+          '& .MuiListItemIcon-root, & .MuiListItemText-root': {
+            m: 0,
+          },
+        }}
+      >
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            color,
+            '& .MuiSvgIcon-root': {
+              fontSize: { xs: 28, sm: 32 },
+            },
+          }}
         >
-            <ListItemButton
-                sx={{
-                    color: 'var(--pba-texto-menu)',
-                    minHeight: 52,
-                    justifyContent: open ? 'center' : 'center',
-                    px: 2,
-                    py: 1.5,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    borderRadius: 1,
-                    gap: open ? 2 : 0,
-                    fontSize: '1rem',
-                    maxWidth: open ? 420 : undefined,
-                    mx: open ? 'auto' : undefined,
-                    '&:hover': {
-                        backgroundColor: 'var(--pba-primary) !important',
-                        color: '#fff',
-                        '& .MuiListItemIcon-root': {
-                            color: '#fff !important',
-                        },
-                    },
-                    '&:focus-visible': {
-                        outline: '2px solid var(--pba-primary)',
-                        outlineOffset: 2,
-                    },
-                }}
-                onClick={onClick}
-            >
-                <ListItemIcon
-                    sx={{
-                        minWidth: 0,
-                        justifyContent: 'center',
-                        color: color,
-                    }}
-                >
-                    {icon}
-                </ListItemIcon>
-                <ListItemText
-                    primary={text}
-                    primaryTypographyProps={{
-                        fontFamily: 'var(--font-primary)',
-                        fontWeight: 600,
-                        fontSize: '1rem',
-                        sx: {
-                            color: 'inherit',
-                            textAlign: open ? 'center' : 'left',
-                        },
-                    }}
-                    sx={{
-                        opacity: open ? 1 : 0,
-                        width: open ? 'auto' : 0,
-                        overflow: 'hidden',
-                        flex: open ? '0 1 auto' : 0,
-                        m: 0,
-                    }}
-                />
-            </ListItemButton>
-        </ListItem>
-    );
+          {icon}
+        </ListItemIcon>
+        <ListItemText
+          primary={text}
+          primaryTypographyProps={{
+            fontFamily: 'var(--font-primary)',
+            fontWeight: 600,
+            fontSize: { xs: '0.8125rem', sm: '0.875rem' },
+            textAlign: 'center',
+            lineHeight: 1.25,
+            sx: {
+              width: '100%',
+              display: 'block',
+              color: 'text.primary',
+              opacity: open ? 1 : 0,
+              maxHeight: open ? 'none' : 0,
+              overflow: 'hidden',
+            },
+          }}
+          sx={{ m: 0, width: '100%', display: 'flex', justifyContent: 'center' }}
+        />
+      </ListItemButton>
+    </ListItem>
+  );
 };
 
 export default BotonesDrawer;

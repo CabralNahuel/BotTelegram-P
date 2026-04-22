@@ -1,4 +1,5 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EmailIcon from '@mui/icons-material/Email';
@@ -35,37 +36,37 @@ export default function FooterLogo() {
         sx={{ maxWidth: 720, width: '100%' }}
       >
         <Box
-          sx={{
+          sx={(theme) => ({
             width: 72,
             height: 72,
             flexShrink: 0,
             borderRadius: '50%',
             overflow: 'hidden',
-            bgcolor: 'background.default',
+            /* Fondo más claro que el footer para que el logo no se pierda en el oscuro */
+            bgcolor: alpha(theme.palette.common.white, 0.12),
             border: '2px solid',
-            borderColor: 'divider',
+            borderColor: alpha(theme.palette.common.white, 0.22),
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.35)',
-          }}
+            boxShadow: `0 1px 4px ${alpha(theme.palette.common.black, 0.35)}`,
+          })}
         >
           <Box
             component="img"
             src={logoPrincipal}
             alt="Logo"
             sx={{
-              width: '78%',
-              height: '78%',
+              width: '82%',
+              height: '82%',
               objectFit: 'contain',
+              filter: 'brightness(1.12) contrast(1.04)',
             }}
           />
         </Box>
 
         <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }} sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
-          <Typography variant="caption" color="text.secondary" sx={{ letterSpacing: '0.02em' }}>
-            © {new Date().getFullYear()} Cabral Nahuel
-          </Typography>
+         
           <Stack direction="row" spacing={0.5} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
             <IconButton
               component="a"
@@ -99,6 +100,9 @@ export default function FooterLogo() {
               <GitHubIcon fontSize="small" />
             </IconButton>
           </Stack>
+          <Typography variant="caption" color="text.secondary" sx={{ letterSpacing: '0.02em' }}>
+            © {new Date().getFullYear()} Cabral Nahuel
+          </Typography>
         </Stack>
       </Stack>
     </Box>

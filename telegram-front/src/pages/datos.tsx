@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import EstadisticasInteracciones from '../componentes/estadisticasInteracciones';
 import DispositivosC from '../componentes/tableroContador';
 import BotonesDrawer from '../componentes/botonesDrawer';
+import { drawerNavListSx, drawerNavScrollBoxSx } from '../componentes/drawerNavListStyles';
 import FooterLogo from '../componentes/footerLogo';
 
 export default function Datos() {
@@ -153,19 +154,8 @@ export default function Datos() {
               </IconButton>
             </Box>
           </Box>
-          <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 2, py: 3 }}>
-            <List
-              sx={{
-                width: '100%',
-                maxWidth: 420,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                justifyContent: 'space-around',
-                height: '100%',
-                gap: 0.5,
-              }}
-            >
+          <Box sx={drawerNavScrollBoxSx}>
+            <List component="ul" disablePadding aria-label="Navegación principal" sx={drawerNavListSx}>
               {drawerItems.map((item, index) => (
                 <BotonesDrawer
                   color={item.color}

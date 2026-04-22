@@ -26,6 +26,7 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import CloseIcon from '@mui/icons-material/Close';
 import BotonesDrawer from './botonesDrawer';
+import { drawerNavListSx, drawerNavScrollBoxSx } from './drawerNavListStyles';
 import KeyIcon from '@mui/icons-material/Key';
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
@@ -345,8 +346,8 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
             </IconButton>
           </Box>
         </Box>
-        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 2, py: 3 }}>
-          <List sx={{ width: '100%', maxWidth: 420, display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'space-around', height: '100%', gap: 0.5 }}>
+        <Box sx={drawerNavScrollBoxSx}>
+          <List component="ul" disablePadding aria-label="Navegación principal" sx={drawerNavListSx}>
             {drawerItems.map((item, index) => (
               <BotonesDrawer
                 color={item.color}

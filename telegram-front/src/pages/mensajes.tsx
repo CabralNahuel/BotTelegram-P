@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import BotonesDrawer from '../componentes/botonesDrawer';
+import { drawerNavListSx, drawerNavScrollBoxSx } from '../componentes/drawerNavListStyles';
 import KeyIcon from '@mui/icons-material/Key';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { InsertChartOutlined } from '@mui/icons-material';
@@ -337,8 +338,8 @@ const MensajesN: React.FC = () => {
               </IconButton>
             </Box>
           </Box>
-          <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 2, py: 3 }}>
-            <List sx={{ width: '100%', maxWidth: 420, display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'space-around', height: '100%', gap: 0.5 }}>
+          <Box sx={drawerNavScrollBoxSx}>
+            <List component="ul" disablePadding aria-label="Navegación principal" sx={drawerNavListSx}>
               {drawerItems.map((item, index) => (
                 <BotonesDrawer
                   color={item.color}

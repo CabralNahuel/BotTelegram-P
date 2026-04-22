@@ -12,6 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import './styles.css';
 import BotonesDrawer from './botonesDrawer';
+import { drawerNavListSx, drawerNavScrollBoxSx } from './drawerNavListStyles';
 import Bienvenida from './bienvenida';
 import KeyIcon from '@mui/icons-material/Key';
 import AddHomeIcon from '@mui/icons-material/AddHome';
@@ -199,37 +200,18 @@ export default function DrawerN() {
                     </Box>
                 </Box>
 
-                <Box
-                    sx={{
-                        flex: 1,
-                        minHeight: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        px: 2,
-                        py: 3,
-                    }}
-                >
+                <Box sx={drawerNavScrollBoxSx}>
                     <List
-                        sx={{
-                            width: '100%',
-                            maxWidth: 420,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'stretch',
-                            justifyContent: 'space-around',
-                            height: '100%',
-                            
-                            gap: 0.5,
-                        }}
+                        component="ul"
+                        disablePadding
+                        aria-label="Navegación principal"
+                        sx={drawerNavListSx}
                     >
-                        {items.map((item, index) => (
+                        {items.map((item) => (
                             <BotonesDrawer
-                                color={item.color}
                                 key={item.text}
+                                color={item.color}
                                 text={item.text}
-                                index={index}
                                 open={open}
                                 icon={item.icon}
                                 onClick={() =>
@@ -266,16 +248,59 @@ export default function DrawerN() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        /* AppBar fixed: sin esto el título y el inicio del contenido quedan debajo del header */
+                        pt: {
+                            xs: 'calc(56px + env(safe-area-inset-top, 0px))',
+                            sm: 'calc(64px + env(safe-area-inset-top, 0px))',
+                        },
                         px: { xs: 1.5, sm: 3 },
                         pb: 1,
                     }}
                 >
-                    <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',marginTop:'4rem' }}>
-                        <Typography variant="h4" component="h2" marginTop={'4rem'} sx={{ fontFamily: 'var(--font-primary)', fontWeight: 700, color: 'var(--pba-primary)' }}>
-                            {titulos}
-                        </Typography>
-                    </Box>
-                    <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', display: 'flex', justifyContent: 'center', marginLeft: 2, marginRight: 2, width: '100%' }}>
+                    {titulos !== 'Bienvenida' && (
+                        <Box
+                            sx={{
+                                flexShrink: 0,
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                pt: { xs: 2, sm: 2.5 },
+                                pb: 1.5,
+                                px: { xs: 1.5, sm: 2 },
+                            }}
+                        >
+                            <Typography
+                                component="h2"
+                                variant="h3"
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: 720,
+                                    textAlign: 'center',
+                                    fontFamily: 'var(--font-primary)',
+                                    fontWeight: 600,
+                                    color: 'primary.main',
+                                    fontSize: { xs: '1.75rem', sm: '2.125rem' },
+                                    lineHeight: 1.2,
+                                    letterSpacing: '-0.01em',
+                                }}
+                            >
+                                {titulos}
+                            </Typography>
+                        </Box>
+                    )}
+                    <Box
+                        sx={{
+                            flex: 1,
+                            minHeight: 0,
+                            overflow: 'auto',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'stretch',
+                            width: '100%',
+                            px: { xs: 1.5, sm: 2 },
+                            pb: 2,
+                        }}
+                    >
                         {selectedComponent}
                     </Box>
                 </Box>
