@@ -1,6 +1,7 @@
 const MensajesMd = require('../models/model.mensajes');
 const MenuesMd = require('../models/model.menues');
 const TemaMd = require('../models/model.tema');
+const { Op } = require('sequelize');
 
 const MAX_MENSAJE_LENGTH = 50000;
 
@@ -13,10 +14,54 @@ const sacarEmoticones = (text) => {
   return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDDE6-\uDDFF]|\uD83D[\uDC00-\uDE4F]|\uD83D[\uDE80-\uDEFF]|\uD83E[\uDD00-\uDDFF])/g, '');
 }
 
+function normalizarComandoTema(raw = '', fallbackTitulo = '') {
+  const base = sacarEmoticones(String(raw || fallbackTitulo || ''))
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/^\/+/, '')
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+    .trim();
+  return base || 'tema';
+}
+
+async function comandoTemaExiste(comando, excludeId = null) {
+  const where = {
+    [Op.and]: [
+      TemaMd.sequelize.where(
+        TemaMd.sequelize.fn('LOWER', TemaMd.sequelize.col('comando_tema')),
+        comando.toLowerCase(),
+      ),
+      { eliminado: { [Op.ne]: 1 } },
+    ],
+  };
+  if (excludeId !== null) {
+    where[Op.and].push({ id: { [Op.ne]: excludeId } });
+  }
+  const existe = await TemaMd.findOne({ where });
+  return Boolean(existe);
+}
+
 const obtenerMenuesConTemas = async (req, res) => {
   const { idMenu } = req.params;
 
   try {
+    if (String(idMenu).toLowerCase() === 'global') {
+      const temasGlobales = await TemaMd.findAll({
+        where: { idmenu: null, eliminado: 0 },
+        order: [['id', 'ASC']],
+      });
+      const temas = temasGlobales.map((tema) => ({
+        id: tema.id,
+        idmenu: null,
+        titulo: tema.tema,
+        comando_tema: tema.comando_tema,
+        eliminado: tema.eliminado,
+      }));
+      return res.json({ idmenu: null, global: true, temas });
+    }
+
     
     const menuConTemas = await MenuesMd.findOne({
       where: { id: idMenu, eliminado: 0 },
@@ -62,7 +107,7 @@ const obtenerMensajesPorTema = async (req, res) => {
     const actualizarTema = async (req, res) => {
       const { id } = req.params;
       const { titulo, comando_tema } = req.body;
-      let comando_temaSinEmoticon = sacarEmoticones(comando_tema)
+      const comandoTemaBase = normalizarComandoTema(comando_tema, titulo);
 
     
       try {
@@ -72,8 +117,15 @@ const obtenerMensajesPorTema = async (req, res) => {
           return res.status(404).json({ message: 'Tema no encontrado' });
         }
         
+        let comandoFinal = comandoTemaBase;
+        let sufijo = 1;
+        while (await comandoTemaExiste(comandoFinal, Number(id))) {
+          comandoFinal = `${comandoTemaBase}_${sufijo}`;
+          sufijo += 1;
+        }
+
         temaActualizado.tema = titulo;
-        temaActualizado.comando_tema = comando_temaSinEmoticon;
+        temaActualizado.comando_tema = comandoFinal;
         await temaActualizado.save();
     
         return res.json({ message: 'Tema actualizado correctamente', tema: temaActualizado });
@@ -112,16 +164,19 @@ const obtenerMensajesPorTema = async (req, res) => {
       let { titulo, comando_tema, idmenu } = req.body;
     
       try {
-        // Verificar si el comando_tema ya existe
-        let temaExistente = await TemaMd.findOne({ where: { comando_tema: comando_tema } });
-    
-        // Si existe, agregar "a" al final hasta que sea único
-        while (temaExistente) {
-          comando_tema += 'a';
-          temaExistente = await TemaMd.findOne({ where: { comando_tema: comando_tema } });
+        const idmenuFinal =
+          idmenu === null || idmenu === undefined || String(idmenu).toLowerCase() === 'global'
+            ? null
+            : Number(idmenu);
+        const comandoTemaBase = normalizarComandoTema(comando_tema, titulo);
+        let comandoFinal = comandoTemaBase;
+        let sufijo = 1;
+        while (await comandoTemaExiste(comandoFinal)) {
+          comandoFinal = `${comandoTemaBase}_${sufijo}`;
+          sufijo += 1;
         }
         // Crear el nuevo tema
-        const nuevoTema = await TemaMd.create({ tema: titulo, comando_tema: comando_tema, idmenu, eliminado: 0 });
+        const nuevoTema = await TemaMd.create({ tema: titulo, comando_tema: comandoFinal, idmenu: idmenuFinal, eliminado: 0 });
         res.json(nuevoTema);
       } catch (error) {
         console.error('Error al agregar el nuevo tema:', error);

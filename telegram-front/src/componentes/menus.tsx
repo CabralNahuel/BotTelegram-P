@@ -26,6 +26,7 @@ import AddHomeIcon from '@mui/icons-material/AddHome';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { InsertChartOutlined } from '@mui/icons-material';
+import PublicIcon from '@mui/icons-material/Public';
 
 interface TítulosDePaneles {
   [key: string]: { titulo: string; temas: { id: number; titulo: string }[] };
@@ -346,6 +347,22 @@ export default function Menus() {
       <Box component="main" sx={{ width: "100%", height: "100%", overflow: "auto" }}>
         <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
           <FixedHeader>Menu</FixedHeader>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+            <Button
+              type="button"
+              variant="outlined"
+              startIcon={<PublicIcon />}
+              onClick={() => navegar('/menu/temas/global')}
+              sx={{
+                textTransform: 'none',
+                fontFamily: 'var(--font-secondary)',
+                borderColor: 'var(--pba-gris-claro)',
+                color: '#c7bcff',
+              }}
+            >
+              Temas globales
+            </Button>
+          </Box>
           <AcordeonMenu
             titulos={menues}
             desplegar={desplegar}

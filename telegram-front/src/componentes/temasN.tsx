@@ -87,11 +87,13 @@ interface TemarioNProps {
 }
 
 const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoEliminar, insertarFoto }) => {
+  const esGlobal = String(idMenu).toLowerCase() === 'global';
   const [open] = React.useState(false);
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [filas, setFilas] = React.useState<TemaFila[]>([]);
   const [texto, setTexto] = React.useState(''); // Estado para controlar el texto en el campo de diálogo
-  const [filaActual, setFilaActual] = React.useState<{ id: number, titulo: string } | null>(null);
+  const [comandoTema, setComandoTema] = React.useState('');
+  const [filaActual, setFilaActual] = React.useState<{ id: number, titulo: string, comando_tema?: string } | null>(null);
   const [openDialog, setOpenDialog] = React.useState(false); // Estado para controlar la apertura del diálogo de edición
   const [, setAgregandoNuevo] = React.useState(false); // Estado para indicar si se está agregando un nuevo elemento
   const [idMenues, setIdMenu] = React.useState<number | null>(null); // Estado para almacenar el id del menú
@@ -124,19 +126,31 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
     obtenerMenuesConTemas();
   }, [obtenerMenuesConTemas]);
 
+  const normalizarComandoTema = (raw: string, fallbackTitulo = '') => {
+    const base = (raw || fallbackTitulo || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/^\/+/, '')
+      .toLowerCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z0-9_]/g, '')
+      .trim();
+    return base || `cnd${obtenerIniciales(fallbackTitulo)}`;
+  };
+
   // Función para manejar el guardado de cambios en una fila
   const manejarGuardar = async () => {
     if (filaActual) {
-      const comando_tema = `Cnd${obtenerIniciales(texto)}`;
+      const comando_tema = normalizarComandoTema(comandoTema, texto);
       let contador = 0;
 
 
       // Verificar si el comando_tema ya existe en alguna fila actual
 
       let comando_tema_modificado = comando_tema;
-      while (filas.some(fila => fila.comando_tema === comando_tema_modificado && fila.id !== filaActual.id)) {
+      while (filas.some(fila => fila.comando_tema.toLowerCase() === comando_tema_modificado.toLowerCase() && fila.id !== filaActual.id)) {
         contador++;
-        comando_tema_modificado = `${comando_tema}${'a'.repeat(contador)}`;
+        comando_tema_modificado = `${comando_tema}_${contador}`;
 
       }
 
@@ -151,7 +165,8 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
         });
 
         if (!response.ok) {
-          throw new Error('Error al actualizar el tema');
+          const body = await response.json().catch(() => ({}));
+          throw new Error(body?.message || 'Error al actualizar el tema');
         }
 
         // Actualizar el estado local con las filas actualizadas
@@ -178,11 +193,13 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
 
     setOpenDialog(false);
     setTexto('');
+    setComandoTema('');
   };
-  const editar = (fila: { id: number, titulo: string }) => {
+  const editar = (fila: { id: number, titulo: string, comando_tema?: string }) => {
 
     setFilaActual(fila);
     setTexto(fila.titulo);
+    setComandoTema(fila.comando_tema || '');
     setOpenDialog(true);
   };
 
@@ -215,18 +232,18 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
   // Función para agregar un nuevo tema
 
   const manejarAgregarTema = async (titulo: string) => {
-    const comando_tema = `Cnd${obtenerIniciales(titulo)}`;
+    const comando_tema = normalizarComandoTema('', titulo);
     let contador = 0;
     let comando_tema_modificado = comando_tema;
-    while (filas.some(fila => fila.comando_tema === comando_tema_modificado)) {
+    while (filas.some(fila => fila.comando_tema.toLowerCase() === comando_tema_modificado.toLowerCase())) {
       contador++;
-      comando_tema_modificado = `${comando_tema}${'a'.repeat(contador)}`;
+      comando_tema_modificado = `${comando_tema}_${contador}`;
     }
 
     try {
       const response = await apiFetch('/menu/tema', {
         method: 'POST',
-        body: JSON.stringify({ titulo, comando_tema: comando_tema_modificado, idmenu: idMenues }),
+        body: JSON.stringify({ titulo, comando_tema: comando_tema_modificado, idmenu: esGlobal ? null : idMenues }),
       });
 
       if (!response.ok) {
@@ -252,6 +269,7 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
     setAgregandoNuevo(false);
     setFilaActual(null);
     setTexto('');
+    setComandoTema('');
   };
 
   return (
@@ -364,7 +382,7 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
       </MuiDrawer>
       <Box component="main" sx={{ width: "100%", height: "100%", overflow: "auto" }}>
         <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
-          <FixedHeader>Temas</FixedHeader>
+          <FixedHeader>{esGlobal ? 'Temas globales' : 'Temas'}</FixedHeader>
           <TableContainer sx={{ overflowX: 'auto', width: '100%', maxWidth: '100%' }}>
             <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
               <TableBody>
@@ -408,9 +426,29 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
               
             }}
             id="name"
-            placeholder="Nombre del Menu"
+            placeholder={esGlobal ? "Nombre del tema global" : "Nombre del tema"}
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
+          />
+          <TextareaAutosize
+            minRows={1}
+            style={{
+              width: '100%',
+              minWidth: 0,
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              resize: 'none',
+              border: '2px solid var(--pba-gris-claro)',
+              borderRadius: 10,
+              padding: 5,
+              overflowWrap: 'anywhere',
+              wordBreak: 'break-word',
+              marginTop: 10,
+            }}
+            id="command"
+            placeholder="Comando (ej: linkedin o proyecto_web)"
+            value={comandoTema}
+            onChange={(e) => setComandoTema(e.target.value)}
           />
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center" }}>

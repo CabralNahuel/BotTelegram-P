@@ -4,6 +4,7 @@ import Cargando from './cargando';
 import BotonAgregar from './botonAgregar';
 import { apiFetch } from '../api/client';
 import { useSnackbarFeedback } from '../hooks/useSnackbarFeedback';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 
 const tituloBienvenidaSx = {
   flexShrink: 0,
@@ -59,6 +60,10 @@ export default function Bienvenida() {
   const [bienvenida, setBienvenida] = React.useState('');
   const [cargando, setCargando] = React.useState(true);
   const { notify, SnackbarOutlet } = useSnackbarFeedback();
+  const bienvenidaRenderizada = React.useMemo(
+    () => sanitizeHtml((bienvenida ?? '').replace(/\n/g, '<br />')),
+    [bienvenida],
+  );
 
   const enviar = async (textoBienvenida: string) => {
     try {
@@ -147,7 +152,7 @@ export default function Bienvenida() {
           >
             <Stack spacing={3} alignItems="stretch">
               <Typography
-                component="p"
+                component="div"
                 variant="body1"
                 textAlign="center"
                 sx={{
@@ -157,9 +162,8 @@ export default function Bienvenida() {
                   lineHeight: 1.6,
                   overflowWrap: 'anywhere',
                 }}
-              >
-                {bienvenida}
-              </Typography>
+                dangerouslySetInnerHTML={{ __html: bienvenidaRenderizada }}
+              />
               <Box sx={{ width: '100%', minWidth: 0 }}>
                 <BotonAgregar
                   onAdd={enviar}
