@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const UsuarioMd = require('../models/model.usuario');
 const BienvenidaMd = require('../models/model.bienvenida');
 const TokenMd = require('../models/model.token');
@@ -29,7 +30,13 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Usuario no encontrado' });
     }
 
-    const validContraseña = (contraseña === user.password);
+    // Passwords hasheadas con bcrypt empiezan por $2a$, $2b$ o $2y$.
+    // Mantengo fallback a comparación literal para datos legacy pre-hash.
+    const stored = user.password || '';
+    const esBcrypt = /^\$2[aby]\$/.test(stored);
+    const validContraseña = esBcrypt
+      ? await bcrypt.compare(contraseña ?? '', stored)
+      : contraseña === stored;
 
     if (!validContraseña) {
       return res.status(401).json({ message: 'Contraseña incorrecta' });

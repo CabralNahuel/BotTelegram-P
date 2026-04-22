@@ -1,0 +1,21 @@
+# Config de Netlify para el panel admin (Vite + React Router).
+# Este archivo vive dentro de `telegram-front/`. En el dashboard de Netlify seteá
+# "Base directory" = `telegram-front` para que este .toml se detecte.
+#
+# Variables a cargar en Netlify (Site settings > Environment variables):
+#   VITE_API_BASE_URL        = https://telegram-bot-backend-xxxx.onrender.com
+#   VITE_BASE                = /
+#   VITE_API_PATH_PREFIX     = (vacío)
+#   VITE_DESARROLLO          = https://telegram-bot-backend-xxxx.onrender.com
+#   VITE_PRODUCCION          = https://telegram-bot-backend-xxxx.onrender.com
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# React Router (BrowserRouter): todas las rutas deben servir index.html,
+# así /home, /menu, etc. no dan 404 al recargar.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

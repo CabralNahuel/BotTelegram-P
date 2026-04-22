@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Button, TextField, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress, Grid, Button, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -14,6 +14,7 @@ const Login: React.FC = () => {
   const [usuario, setUsuarioLocal] = useState<string>('');
   const [contraseña, setContraseña] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [cargando, setCargando] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,7 +23,8 @@ const Login: React.FC = () => {
   };
 
   const ingresar = async () => {
-   
+    setError(null);
+    setCargando(true);
 
     try {
       const loginPaths = ['/login'];
@@ -71,6 +73,8 @@ const Login: React.FC = () => {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Error al iniciar sesion.';
       setError(message);
+    } finally {
+      setCargando(false);
     }
   };
 
@@ -124,12 +128,21 @@ const Login: React.FC = () => {
           Telegram Bot
         </Typography>
         <Grid container spacing={2} component="form" onSubmit={handleSubmit}>
+          {cargando && (
+            <Grid item xs={12}>
+              <Alert severity="info" sx={{ fontSize: '0.85rem' }}>
+                Conectando con el servidor. El backend está en un free tier y puede
+                tardar hasta 30 segundos en despertar la primera vez.
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField
               type="text"
               label="Usuario"
               fullWidth
               value={usuario}
+              disabled={cargando}
               onChange={(e) => setUsuarioLocal(e.target.value)}
               InputProps={{
                 style: { fontFamily: 'var(--font-secondary)' },
@@ -141,6 +154,7 @@ const Login: React.FC = () => {
               type={mostrarContraseña ? 'text' : 'password'}
               label="Contraseña"
               fullWidth
+              disabled={cargando}
               onChange={(e) => setContraseña(e.target.value)}
               InputProps={{
                 endAdornment: (
@@ -161,7 +175,6 @@ const Login: React.FC = () => {
           )}
           <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
             <Button
-              
               sx={{
                 width: { xs: '100%', sm: 'auto' },
                 minWidth: { sm: 200 },
@@ -171,11 +184,12 @@ const Login: React.FC = () => {
               variant="contained"
               type="submit"
               color="primary"
-              endIcon={<SendIcon />}
+              endIcon={cargando ? <CircularProgress size={18} color="inherit" /> : <SendIcon />}
               fullWidth
+              disabled={cargando}
               onClick={ingresar}
             >
-              Ingresar
+              {cargando ? 'Ingresando...' : 'Ingresar'}
             </Button>
           </Grid>
         </Grid>
