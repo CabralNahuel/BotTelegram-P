@@ -23,11 +23,11 @@ const AcordeonMenu: React.FC<AcordeonMenuProps> = ({ titulos, desplegar, escucha
       {Object.keys(titulos).map(panel =>
         (
 
-          <Box key={panel} sx={{ mb: 0, border: 'none' }}>
+          <Box key={panel} sx={{ mb: 2, border: 'none' }}>
 
             <Accordion expanded={desplegar === panel} onChange={escucharCambios(panel)}>
               <AccordionSummary
-                expandIcon={<ExpandMore sx={{ width: "40px" }} />}
+                expandIcon={<ExpandMore sx={{ width: "40px", color: '#fff' }} />}
                 aria-controls={`panel-${panel}-content`}
                 id={`panel-${panel}-header`}
                 sx={{ cursor: "pointer", padding: "0px" }}
@@ -41,6 +41,7 @@ const AcordeonMenu: React.FC<AcordeonMenuProps> = ({ titulos, desplegar, escucha
                     alignItems: "center",
                     fontFamily: "var(--font-secundary)",
                     fontWeight: "500",
+                    paddingLeft: "10px",
 
                   }}
                 >
@@ -53,8 +54,12 @@ const AcordeonMenu: React.FC<AcordeonMenuProps> = ({ titulos, desplegar, escucha
                       event.stopPropagation();
                       editar(panel);
                     }}
+                    sx={{
+                      '& .MuiSvgIcon-root': { color: '#c7bcff' },
+                      '&:hover .MuiSvgIcon-root': { color: '#ffffff' },
+                    }}
                   >
-                    <EditIcon sx={{ color: "var(--color1)" }} />
+                    <EditIcon />
                   </IconButton>
                   <IconButton
                     aria-label="VerTemas"
@@ -62,8 +67,12 @@ const AcordeonMenu: React.FC<AcordeonMenuProps> = ({ titulos, desplegar, escucha
                       event.stopPropagation();
                       redirigir(`/menu/temas/${panel}`);
                     }}
+                    sx={{
+                      '& .MuiSvgIcon-root': { color: '#c7bcff' },
+                      '&:hover .MuiSvgIcon-root': { color: '#ffffff' },
+                    }}
                   >
-                    <AddIcon sx={{ color: "var(--color2)" }} />
+                    <AddIcon />
                   </IconButton>
                   <IconButton
                     aria-label="eliminar"
@@ -71,12 +80,16 @@ const AcordeonMenu: React.FC<AcordeonMenuProps> = ({ titulos, desplegar, escucha
                       event.stopPropagation();
                       eliminar(panel);
                     }}
+                    sx={{
+                      '& .MuiSvgIcon-root': { color: 'var(--color5)' },
+                      '&:hover .MuiSvgIcon-root': { color: '#d32f2f' },
+                    }}
                   >
-                    <DeleteIcon sx={{ color: "var(--color5)" }} />
+                    <DeleteIcon />
                   </IconButton>
                 </Box>
               </AccordionSummary>
-              <AccordionDetails sx={{ padding: "0px" }}>
+              <AccordionDetails sx={{ padding: "10px 0px" }}>
                 <Box sx={{ width: "80%", overflowWrap: "anywhere", display: "flex", flexDirection: "column", gap: "10px" }}>
                   {titulos[panel].temas.length === 0 ? (
                     <Typography color="var(--color3)">No hay temas asociados.</Typography>

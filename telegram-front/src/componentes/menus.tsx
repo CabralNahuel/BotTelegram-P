@@ -196,13 +196,9 @@ export default function Menus() {
   };
 
   const FixedHeader = styled('h3')({
-    position: 'sticky',
     fontFamily: 'var(--font-primary)',
     fontWeight: 700,
     color: 'var(--pba-primary)',
-    top: 0,
-    background: 'var(--pba-header-bg)',
-    zIndex: 10,
     padding: '1rem 0',
     textAlign: 'center',
     fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
@@ -348,18 +344,22 @@ export default function Menus() {
         <Divider />
       </MuiDrawer>
       <Box component="main" sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-        <FixedHeader >Menu</FixedHeader>
-        <AcordeonMenu
-          titulos={menues}
-          desplegar={desplegar}
-          escucharCambios={escucharCambios}
-          editar={editar}
-          redirigir={redirigir}
-          eliminar={solicitarEliminar}
-        />
+        <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+          <FixedHeader>Menu</FixedHeader>
+          <AcordeonMenu
+            titulos={menues}
+            desplegar={desplegar}
+            escucharCambios={escucharCambios}
+            editar={editar}
+            redirigir={redirigir}
+            eliminar={solicitarEliminar}
+          />
+        </Box>
       </Box>
       <Box sx={{ width: "100%", mt: "auto" }}>
-        <BotonAgregar onAdd={manejarAgregarTema} label="Menu" agregarEditar='Agregar' />
+        <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+          <BotonAgregar onAdd={manejarAgregarTema} label="Menu" agregarEditar='Agregar' />
+        </Box>
       </Box>
       <Dialog open={abrirDialogo} onClose={cerrarDialogo} fullWidth maxWidth="sm">
         <DialogTitle sx={{ overflowWrap: "anywhere" }}>{agregarNuevo ? 'Agregar nuevo Menu' : `Editar título "${textoTemporal}"`}</DialogTitle>

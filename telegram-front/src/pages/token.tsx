@@ -38,6 +38,10 @@ export default function Token() {
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [token, setToken] = React.useState('');
   const [cargando, setCargando] = React.useState(true);
+  const tokenDisponible =
+    token &&
+    token !== 'No se encontró el token' &&
+    token !== 'Error al cargar el token';
 
   const drawerItems = [
     { text: 'Bienvenida', icon: <AddHomeIcon />, path: '/home', color: 'var(--color8)' },
@@ -285,45 +289,82 @@ export default function Token() {
               <Cargando />
             </Box>
           ) : (
-            <Box sx={{ display: 'grid', maxWidth: 550, width: '100%' }}>
-              <Stack spacing={2} textAlign="center" alignItems="center">
-                <Box>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      gap: 1,
-                      fontFamily: 'var(--font-secondary)',
-                    }}
-                  >
-                    {token}
-                    <Tooltip title="Copiar token">
-                      <IconButton onClick={copiarToken} aria-label="Copiar token">
-                        <ContentCopyIcon sx={{ color: 'var(--color3)' }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Typography>
+            <Box sx={{ display: 'grid', maxWidth: 680, width: '100%' }}>
+              <Stack spacing={2}>
+                <Box
+                  sx={{
+                    border: '1px solid var(--pba-gris-claro)',
+                    bgcolor: 'rgba(0, 154, 174, 0.05)',
+                    borderRadius: 2,
+                    p: { xs: 2, sm: 2.5 },
+                  }}
+                >
+                  <Stack spacing={1.5}>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} flexWrap="wrap">
+                      <Typography sx={{ fontFamily: 'var(--font-primary)', fontWeight: 700, color: '#fff' }}>
+                        Token actual del bot
+                      </Typography>
+                    </Stack>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        flexWrap: 'wrap',
+                        wordBreak: 'break-all',
+                        fontFamily: 'var(--font-secondary)',
+                        color: '#fff',
+                      }}
+                    >
+                      {token}
+                      <Tooltip title="Copiar token">
+                        <span>
+                          <IconButton
+                            onClick={copiarToken}
+                            aria-label="Copiar token"
+                            disabled={!tokenDisponible}
+                            size="small"
+                          >
+                            <ContentCopyIcon sx={{ color: tokenDisponible ? 'var(--color3)' : 'var(--pba-gris-claro)' }} />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    </Typography>
+                    <Typography sx={{ fontFamily: 'var(--font-secondary)', color: 'rgba(255,255,255,0.78)', fontSize: '0.88rem' }}>
+                      Usá este token para registrar usuarios en Telegram. Si lo regenerás, compartí el nuevo valor.
+                    </Typography>
+                  </Stack>
                 </Box>
-                <Box sx={{ width: 'max-content' }}>
-                  <Button
-                    onClick={generarToken}
-                    variant="contained"
-                    type="button"
-                    sx={{
-                      display: 'flex',
-                      gap: 1,
-                      width: '220px',
-                      margin: '0 auto',
-                      fontFamily: 'var(--font-secondary)',
-                      background: 'var(--color1)',
-                    }}
-                    endIcon={<KeyIcon />}
-                  >
-                    Generar token
-                  </Button>
+
+                <Box
+                  sx={{
+                    border: '1px solid var(--pba-gris-claro)',
+                    bgcolor: 'rgba(123, 106, 232, 0.08)',
+                    borderRadius: 2,
+                    p: { xs: 2, sm: 2.5 },
+                  }}
+                >
+                  <Stack spacing={1.5}>
+                    <Typography sx={{ fontFamily: 'var(--font-primary)', fontWeight: 700, color: '#fff' }}>
+                      Acciones rápidas
+                    </Typography>
+                    <Button
+                      onClick={generarToken}
+                      variant="contained"
+                      type="button"
+                      sx={{
+                        display: 'flex',
+                        gap: 1,
+                        width: { xs: '100%', sm: '260px' },
+                        fontFamily: 'var(--font-secondary)',
+                        background: 'var(--color1)',
+                        alignSelf: 'flex-start',
+                      }}
+                      endIcon={<KeyIcon />}
+                    >
+                      Generar nuevo token
+                    </Button>
+                  </Stack>
                 </Box>
               </Stack>
             </Box>

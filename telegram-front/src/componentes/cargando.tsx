@@ -1,6 +1,8 @@
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
 import CircularProgress, {
   circularProgressClasses,
   CircularProgressProps,
@@ -46,8 +48,41 @@ function FacebookCircularProgress(props: CircularProgressProps) {
 
 export default function Cargando() {
   return (
-    <Stack spacing={2} sx={{ flexGrow: 1 }}>
+    <Stack
+      spacing={2}
+      alignItems="center"
+      justifyContent="center"
+      sx={{
+        flexGrow: 1,
+        width: '100%',
+        minHeight: '45vh',
+        px: 2,
+      }}
+    >
       <FacebookCircularProgress />
-         </Stack>
+      <Typography
+        sx={{
+          fontFamily: 'var(--font-secondary)',
+          color: 'rgba(255,255,255,0.82)',
+          fontSize: '0.95rem',
+        }}
+      >
+        Cargando datos...
+      </Typography>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 560,
+          border: '1px solid var(--pba-gris-claro)',
+          borderRadius: 2,
+          p: 2,
+          bgcolor: 'rgba(255,255,255,0.03)',
+        }}
+      >
+        <Skeleton variant="text" width="45%" sx={{ bgcolor: 'rgba(255,255,255,0.16)' }} />
+        <Skeleton variant="rounded" height={42} sx={{ mt: 1.2, bgcolor: 'rgba(255,255,255,0.14)' }} />
+        <Skeleton variant="rounded" height={42} sx={{ mt: 1, bgcolor: 'rgba(255,255,255,0.14)' }} />
+      </Box>
+    </Stack>
   );
 }

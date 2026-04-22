@@ -58,13 +58,9 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const FixedHeader = styled('h3')({
-  position: 'sticky',
   fontFamily: 'var(--font-primary)',
   fontWeight: 700,
   color: 'var(--pba-primary)',
-  top: 0,
-  background: 'var(--pba-header-bg)',
-  zIndex: 10,
   padding: '1rem 0',
   textAlign: 'center',
   fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
@@ -367,28 +363,31 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
         <Divider />
       </MuiDrawer>
       <Box component="main" sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-        <FixedHeader>Temas</FixedHeader>
-        <TableContainer sx={{ overflowX: 'auto', width: '100%', maxWidth: '100%' }}>
-          <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
-            <TableBody>
-              {filas.map((fila) => {
-                return (
-                  <ItemsN
-                    key={fila.id}
-                    fila={fila}
-                    ruteo={ruteo}
-                    redireccion={`${fila.id}`}
-                    editar={editar}
-                    redirigir={redirigir}
-                    manejarEliminar={manejarEliminar}
-                    mostrarEliminar={eliminar}
-                    textoEliminacionSegura={textoEliminar}
-                  />
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+          <FixedHeader>Temas</FixedHeader>
+          <TableContainer sx={{ overflowX: 'auto', width: '100%', maxWidth: '100%' }}>
+            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
+              <TableBody>
+                {filas.map((fila) => {
+                  return (
+                    <ItemsN
+                      key={fila.id}
+                      fila={fila}
+                      ruteo={ruteo}
+                      redireccion={`${fila.id}`}
+                      editar={editar}
+                      redirigir={redirigir}
+                      manejarEliminar={manejarEliminar}
+                      mostrarEliminar={eliminar}
+                      textoEliminacionSegura={textoEliminar}
+                      estiloMenu
+                    />
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
         <Dialog open={openDialog} onClose={manejarCerrarDialogo}>
           <DialogTitle sx={{overflowWrap:"anywhere", minWidth:"300px"}}>{filaActual ? 'Editar ' : 'Editar'}</DialogTitle>
           <DialogContent>
@@ -424,12 +423,14 @@ const ListaN: React.FC<TemarioNProps> = ({ idMenu, ruteo, eliminar, textoElimina
           </DialogActions>
         </Dialog>
       </Box>
-      <BotonAgregar
-        onAdd={(titulo: string) => manejarAgregarTema(titulo)}
-        label="Nombre"
-        showPhotoOption={insertarFoto}
-        agregarEditar='Agregar'
-      />
+      <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+        <BotonAgregar
+          onAdd={(titulo: string) => manejarAgregarTema(titulo)}
+          label="Nombre"
+          showPhotoOption={insertarFoto}
+          agregarEditar='Agregar'
+        />
+      </Box>
     </Box>
   );
 };

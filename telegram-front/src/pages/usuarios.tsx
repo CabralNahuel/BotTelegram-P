@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Stack, Box, Typography, Button, CssBaseline, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Stack, Box, Typography, Button, CssBaseline, AppBar, Toolbar, IconButton, Chip } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -205,39 +205,76 @@ export default function Usuarios() {
             Usuario
           </Typography>
           <Stack spacing={4} textAlign="center" alignItems="center" justifyContent="center" sx={{ flex: 1, width: '100%', maxWidth: 480 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                maxWidth: '69vw',
-                gap: 2,
-                alignItems: 'center',
-                flexDirection: 'column',
-              }}
-            >
-              <Box>
-                <Typography textAlign="justify" sx={{ fontFamily: 'var(--font-secondary)', color: 'var(--color3)' }} fontWeight={400}>
-                  Bienvenido,{' '}
-                  <Typography component="span" fontWeight={600}>
-                    {usuario}
-                  </Typography>
-                </Typography>
-              </Box>
-              <Button
-                onClick={handleCerrarSesion}
-                variant="contained"
-                type="button"
+            <Stack spacing={2} sx={{ width: '100%' }}>
+              <Box
                 sx={{
-                  display: 'flex',
-                  gap: 1,
-                  width: '220px',
-                  margin: '0 auto',
-                  fontFamily: 'var(--font-secondary)',
-                  background: 'var(--color5)',
+                  border: '1px solid var(--pba-gris-claro)',
+                  bgcolor: 'rgba(0, 154, 174, 0.05)',
+                  borderRadius: 2,
+                  p: { xs: 2, sm: 2.5 },
+                  textAlign: 'left',
                 }}
               >
-                Cerrar sesión
-              </Button>
-            </Box>
+                <Stack spacing={1.5}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1} flexWrap="wrap">
+                    <Typography sx={{ fontFamily: 'var(--font-primary)', fontWeight: 700, color: '#fff' }}>
+                      Sesión activa
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label="Conectado"
+                      sx={{ bgcolor: '#1fbf75', color: '#fff', fontFamily: 'var(--font-secondary)', fontWeight: 700 }}
+                    />
+                  </Stack>
+                  <Typography sx={{ fontFamily: 'var(--font-secondary)', color: 'rgba(255,255,255,0.85)' }}>
+                    Usuario actual:{' '}
+                    <Box component="span" sx={{ color: '#fff', fontWeight: 700 }}>
+                      {usuario || 'Sin usuario'}
+                    </Box>
+                  </Typography>
+                  <Typography sx={{ fontFamily: 'var(--font-secondary)', color: 'rgba(255,255,255,0.72)', fontSize: '0.9rem' }}>
+                    Desde esta vista podés confirmar la cuenta en uso y cerrar sesión para ingresar con otro usuario.
+                  </Typography>
+                </Stack>
+              </Box>
+
+              <Box
+                sx={{
+                  border: '1px solid var(--pba-gris-claro)',
+                  bgcolor: 'rgba(123, 106, 232, 0.08)',
+                  borderRadius: 2,
+                  p: { xs: 2, sm: 2.5 },
+                  textAlign: 'left',
+                }}
+              >
+                <Stack spacing={1.5}>
+                  <Typography sx={{ fontFamily: 'var(--font-primary)', fontWeight: 700, color: '#fff' }}>
+                    Seguridad
+                  </Typography>
+                  <Typography sx={{ fontFamily: 'var(--font-secondary)', color: 'rgba(255,255,255,0.75)', fontSize: '0.9rem' }}>
+                    Si terminaste de usar el panel en este dispositivo, cerrá la sesión para proteger el acceso.
+                  </Typography>
+                  <Button
+                    onClick={handleCerrarSesion}
+                    variant="contained"
+                    type="button"
+                    sx={{
+                      display: 'flex',
+                      gap: 1,
+                      width: { xs: '100%', sm: '220px' },
+                      fontFamily: 'var(--font-secondary)',
+                      background: '#d32f2f',
+                      color: '#fff',
+                      '&:hover': { background: '#b71c1c',                      color: '#fff',
+                      },
+                      alignSelf: 'flex-start',
+                    }}
+                  >
+                    Cerrar sesión
+                  </Button>
+                </Stack>
+              </Box>
+            </Stack>
           </Stack>
         </Box>
       </Box>

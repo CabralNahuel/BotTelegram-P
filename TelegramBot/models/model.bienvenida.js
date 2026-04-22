@@ -6,7 +6,7 @@ const BienvenidaMd = db.define(
     "bienvenida",
     {
      textoBienvenida: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         field: "textoBienvenida",
         allowNull: true,
       }  },

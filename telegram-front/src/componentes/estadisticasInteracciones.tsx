@@ -9,6 +9,7 @@ import {
   ToggleButtonGroup,
   TextField,
   Stack,
+  Skeleton,
 } from '@mui/material';
 import {
   BarChart,
@@ -77,18 +78,28 @@ function normalizarEtiqueta(s: string): string {
 }
 
 const PIE_COLORS = [
-  '#009aae',
-  '#00aec3',
-  '#417099',
-  '#ebb813',
-  '#22a954',
-  '#592673',
-  '#be1717',
-  '#838383',
+  '#7D6AE8', // lavender pastel profundo
+  '#5FA8F2', // azul pastel medio
+  '#58C8B8', // menta pastel
+  '#E89AB6', // rosa pastel
+  '#F0B46A', // durazno pastel
+  '#A78BFA', // violeta pastel
+  '#7BC47F', // verde pastel medio
+  '#D98CD9', // malva pastel
 ];
 
-const BAR_TEAL = 'var(--pba-primary)';
-const BAR_GRAY = '#d3d3d3';
+const BAR_COLORS = [
+  '#7D6AE8',
+  '#5FA8F2',
+  '#58C8B8',
+  '#E89AB6',
+  '#F0B46A',
+  '#A78BFA',
+  '#7BC47F',
+  '#D98CD9',
+];
+const VIOLET_SELECTED = '#5b4bb7';
+const VIOLET_SELECTED_HOVER = '#4a3f98';
 
 function parseFechaFlexible(s: string | undefined): number | null {
   if (s == null || !String(s).trim()) return null;
@@ -451,12 +462,12 @@ function BotonFiltroPba({
         letterSpacing: '0.02em',
         lineHeight: 1.2,
         borderRadius: 2,
-        borderColor: 'var(--pba-primary)',
-        color: selected ? '#fff !important' : 'var(--pba-primary)',
-        bgcolor: selected ? 'var(--pba-primary)' : '#fff',
+        borderColor: selected ? VIOLET_SELECTED : 'var(--pba-primary)',
+        color: selected ? '#fff !important' : VIOLET_SELECTED,
+        bgcolor: selected ? VIOLET_SELECTED : '#fff',
         '&:hover': {
-          borderColor: 'var(--pba-primary)',
-          bgcolor: selected ? 'var(--pba-celeste)' : 'rgba(0, 154, 174, 0.08)',
+          borderColor: selected ? VIOLET_SELECTED_HOVER : 'var(--pba-primary)',
+          bgcolor: selected ? VIOLET_SELECTED_HOVER : 'rgba(0, 154, 174, 0.08)',
         },
         px: { xs: 1, sm: 1.5 },
         py: 0.75,
@@ -482,7 +493,8 @@ export default function EstadisticasInteracciones() {
   const [legacyBrutos, setLegacyBrutos] = React.useState<EstadisticaLegacy[]>([]);
   const [agregadoBrutos, setAgregadoBrutos] = React.useState<FilaGrafico[]>([]);
   const [menues, setMenues] = React.useState<MenuRow[]>([]);
-  const [cargando, setCargando] = React.useState(true);
+  const [cargandoInicial, setCargandoInicial] = React.useState(true);
+  const [recargando, setRecargando] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [vista, setVista] = React.useState<VistaTipo>('menu');
   const [menuSeleccionadoId, setMenuSeleccionadoId] = React.useState<string | null>(null);
@@ -521,7 +533,8 @@ export default function EstadisticasInteracciones() {
   React.useEffect(() => {
     let cancel = false;
     const cargar = async () => {
-      setCargando(true);
+      if (cargandoInicial) setCargandoInicial(true);
+      else setRecargando(true);
       setError(null);
       try {
         const [statsResult, menuesResult] = await Promise.allSettled([
@@ -618,7 +631,10 @@ export default function EstadisticasInteracciones() {
           setMenues([]);
         }
       } finally {
-        if (!cancel) setCargando(false);
+        if (!cancel) {
+          setCargandoInicial(false);
+          setRecargando(false);
+        }
       }
     };
     cargar();
@@ -698,7 +714,7 @@ export default function EstadisticasInteracciones() {
 
   const chartHeight = Math.min(Math.max(datosGrafico.length * 40, 280), 720);
 
-  if (cargando) {
+  if (cargandoInicial) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
         <CircularProgress sx={{ color: 'var(--pba-primary)' }} />
@@ -723,58 +739,94 @@ export default function EstadisticasInteracciones() {
           bgcolor: 'rgba(0, 154, 174, 0.04)',
         }}
       >
-        <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: 'var(--pba-secondary)' }}>
-          Período
-        </Typography>
-        <ToggleButtonGroup
-          exclusive
-          value={modoFiltroFecha}
-          onChange={(_, v) => v && setModoFiltroFecha(v)}
-          size="small"
-          sx={{ flexWrap: 'wrap', gap: 0.5, mb: 1.5 }}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'auto 1fr' },
+            alignItems: 'start',
+            columnGap: 2,
+            rowGap: 1,
+          }}
         >
-          <ToggleButton value="todo" sx={{ textTransform: 'none', fontFamily: 'var(--font-primary)' }}>
-            Todo
-          </ToggleButton>
-          <ToggleButton value="mes" sx={{ textTransform: 'none', fontFamily: 'var(--font-primary)' }}>
-            Mes
-          </ToggleButton>
-          <ToggleButton value="rango" sx={{ textTransform: 'none', fontFamily: 'var(--font-primary)' }}>
-            Rango
-          </ToggleButton>
-        </ToggleButtonGroup>
-        {modoFiltroFecha === 'mes' && (
-          <TextField
-            type="month"
-            label="Mes"
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'var(--pba-secondary)' }}>
+            Período
+          </Typography>
+          {modoFiltroFecha === 'mes' && (
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'var(--pba-secondary)' }}>
+              Mes
+            </Typography>
+          )}
+          {modoFiltroFecha === 'rango' && (
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'var(--pba-secondary)' }}>
+              Rango
+            </Typography>
+          )}
+          {modoFiltroFecha === 'todo' && <Box />}
+
+          <ToggleButtonGroup
+            exclusive
+            value={modoFiltroFecha}
+            onChange={(_, v) => v && setModoFiltroFecha(v)}
             size="small"
-            value={mesFiltro}
-            onChange={(e) => setMesFiltro(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            sx={{ minWidth: 200 }}
-          />
-        )}
-        {modoFiltroFecha === 'rango' && (
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
-            <TextField
-              type="date"
-              label="Desde"
-              size="small"
-              value={rangoDesde}
-              onChange={(e) => setRangoDesde(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              type="date"
-              label="Hasta"
-              size="small"
-              value={rangoHasta}
-              onChange={(e) => setRangoHasta(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Stack>
-        )}
-       
+            sx={{
+              flexWrap: 'nowrap',
+              width: 'fit-content',
+              '& .MuiToggleButton-root': {
+                textTransform: 'none',
+                fontFamily: 'var(--font-primary)',
+                borderColor: 'var(--pba-gris-claro)',
+                color: VIOLET_SELECTED,
+                bgcolor: '#fff',
+              },
+              '& .MuiToggleButton-root.Mui-selected': {
+                bgcolor: VIOLET_SELECTED,
+                color: '#fff',
+                borderColor: VIOLET_SELECTED,
+              },
+              '& .MuiToggleButton-root.Mui-selected:hover': {
+                bgcolor: VIOLET_SELECTED_HOVER,
+                borderColor: VIOLET_SELECTED_HOVER,
+              },
+            }}
+          >
+            <ToggleButton value="todo">Todo</ToggleButton>
+            <ToggleButton value="mes">Mes</ToggleButton>
+            <ToggleButton value="rango">Rango</ToggleButton>
+          </ToggleButtonGroup>
+
+          <Box sx={{ minHeight: 40 }}>
+            {modoFiltroFecha === 'mes' && (
+              <TextField
+                type="month"
+                size="small"
+                value={mesFiltro}
+                onChange={(e) => setMesFiltro(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                sx={{ minWidth: 200 }}
+              />
+            )}
+            {modoFiltroFecha === 'rango' && (
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ sm: 'center' }}>
+                <TextField
+                  type="date"
+                  label="Desde"
+                  size="small"
+                  value={rangoDesde}
+                  onChange={(e) => setRangoDesde(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <TextField
+                  type="date"
+                  label="Hasta"
+                  size="small"
+                  value={rangoHasta}
+                  onChange={(e) => setRangoHasta(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Stack>
+            )}
+          </Box>
+        </Box>
       </Box>
 
       {usaJerarquia && (
@@ -837,6 +889,7 @@ export default function EstadisticasInteracciones() {
 
       
 
+      <Box sx={{ position: 'relative' }}>
       {datosGrafico.length === 0 ? (
         <Alert severity="info" sx={{ mt: 1 }}>
           {usaJerarquia ? 'No hay datos para mostrar en esta vista.' : mensajeVacioFallback}
@@ -845,7 +898,7 @@ export default function EstadisticasInteracciones() {
         datosGrafico.length > 0 && (
           <>
             {datosGrafico[0] && (
-              <Typography variant="body2" sx={{ mb: 2, color: 'var(--pba-secondary)' }}>
+              <Typography variant="body2" sx={{ mb: 2, color: '#fff' }}>
                 Más frecuente:{' '}
                 <strong>{etiquetaVisible(datosGrafico[0].nombre)}</strong> ({datosGrafico[0].visualizaciones}{' '}
                 {etiquetaMetrica})
@@ -859,8 +912,8 @@ export default function EstadisticasInteracciones() {
                   data={datosGrafico.slice(0, 20)}
                   margin={{ top: 8, right: 24, left: 8, bottom: 8 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--pba-gris-claro)" />
-                  <XAxis type="number" tick={{ fontSize: 12 }} domain={[0, 'dataMax + 5']} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.18)" />
+                  <XAxis type="number" tick={{ fontSize: 12, fill: '#fff' }} domain={[0, 'dataMax + 5']} />
                   <YAxis
                     type="category"
                     dataKey="nombre"
@@ -868,7 +921,7 @@ export default function EstadisticasInteracciones() {
                       180,
                       Math.max(100, ...datosGrafico.slice(0, 20).map((d) => d.nombre.length * 5)),
                     )}
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: '#fff' }}
                     tickFormatter={(v: string) => {
                       const plain = etiquetaVisible(String(v));
                       return plain.length > 26 ? `${plain.slice(0, 26)}…` : plain;
@@ -881,6 +934,8 @@ export default function EstadisticasInteracciones() {
                       modo === 'eventos' ? 'Clics' : 'Visualizaciones',
                     ]}
                     labelFormatter={(_, payload) => (payload?.[0]?.payload?.nombre as string) ?? ''}
+                    labelStyle={{ color: '#fff' }}
+                    itemStyle={{ color: '#fff' }}
                   />
                   <Bar
                     dataKey="visualizaciones"
@@ -888,7 +943,7 @@ export default function EstadisticasInteracciones() {
                     name={modo === 'eventos' ? 'Clics' : 'Visualizaciones'}
                   >
                     {datosGrafico.slice(0, 20).map((_, i) => (
-                      <Cell key={`cell-bar-${i}`} fill={i % 2 === 0 ? BAR_TEAL : BAR_GRAY} />
+                      <Cell key={`cell-bar-${i}`} fill={BAR_COLORS[i % BAR_COLORS.length]} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -923,6 +978,8 @@ export default function EstadisticasInteracciones() {
                           const name = (item?.payload as { name?: string })?.name ?? '';
                           return [`${value}`, name];
                         }}
+                        labelStyle={{ color: '#fff' }}
+                        itemStyle={{ color: '#fff' }}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -954,10 +1011,10 @@ export default function EstadisticasInteracciones() {
                         }}
                       />
                       <Typography variant="body2" sx={{ flex: 1, lineHeight: 1.4 }}>
-                        <Box component="span" sx={{ fontWeight: 600, color: 'var(--pba-secondary)' }}>
+                        <Box component="span" sx={{ fontWeight: 600, color: '#fff' }}>
                           {d.name}
                         </Box>
-                        <Box component="span" sx={{ color: 'text.secondary', ml: 0.75 }}>
+                        <Box component="span" sx={{ color: '#fff', opacity: 0.9, ml: 0.75 }}>
                           — {d.value} {etiquetaMetrica} ({d.pct.toFixed(0)}%)
                         </Box>
                       </Typography>
@@ -969,6 +1026,24 @@ export default function EstadisticasInteracciones() {
           </>
         )
       )}
+      {recargando && (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            bgcolor: 'rgba(10, 14, 30, 0.58)',
+            borderRadius: 2,
+            px: 1,
+            py: 1,
+            backdropFilter: 'blur(1px)',
+            pointerEvents: 'none',
+          }}
+        >
+          <Skeleton variant="text" width={220} height={24} sx={{ bgcolor: 'rgba(180, 185, 209, 0.18)' }} />
+          <Skeleton variant="rounded" width="100%" height={chartHeight} sx={{ mt: 1, bgcolor: 'rgba(180, 185, 209, 0.2)' }} />
+        </Box>
+      )}
+      </Box>
     </Box>
   );
 }

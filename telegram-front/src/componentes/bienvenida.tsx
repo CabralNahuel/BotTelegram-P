@@ -3,6 +3,7 @@ import { Stack, Box, Typography, Container, Card } from '@mui/material';
 import Cargando from './cargando';
 import BotonAgregar from './botonAgregar';
 import { apiFetch } from '../api/client';
+import { useSnackbarFeedback } from '../hooks/useSnackbarFeedback';
 
 const tituloBienvenidaSx = {
   flexShrink: 0,
@@ -57,6 +58,7 @@ function LayoutBienvenida({ children }: { children: React.ReactNode }) {
 export default function Bienvenida() {
   const [bienvenida, setBienvenida] = React.useState('');
   const [cargando, setCargando] = React.useState(true);
+  const { notify, SnackbarOutlet } = useSnackbarFeedback();
 
   const enviar = async (textoBienvenida: string) => {
     try {
@@ -66,12 +68,21 @@ export default function Bienvenida() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al actualizar el texto de bienvenida');
+        let backendMessage = 'Error al actualizar el texto de bienvenida';
+        try {
+          const body = await response.json();
+          if (body?.message) backendMessage = String(body.message);
+        } catch {
+          // ignore json parse errors
+        }
+        throw new Error(backendMessage);
       }
 
       setBienvenida(textoBienvenida);
+      notify('Texto de bienvenida actualizado', 'success');
     } catch (error) {
       console.error(error);
+      notify(error instanceof Error ? error.message : 'No se pudo actualizar la bienvenida', 'error');
     }
   };
 
@@ -115,45 +126,54 @@ export default function Bienvenida() {
   }
 
   return (
-    <LayoutBienvenida>
-      <Container maxWidth="sm" sx={{ width: '100%', px: { xs: 2, sm: 3 } }}>
-        <Card
-          elevation={0}
-          sx={{
-            width: '100%',
-            maxWidth: 640,
-            mx: 'auto',
-            p: { xs: 2.5, sm: 3 },
-            maxHeight: { xs: 'calc(100vh - 250px)', sm: 'calc(100vh - 280px)' },
-            overflow: 'auto',
-            border: '1px solid',
-            borderColor: 'divider',
-            bgcolor: 'background.paper',
-            borderRadius: 2,
-            boxSizing: 'border-box',
-          }}
-        >
-          <Stack spacing={3} alignItems="stretch">
-            <Typography
-              component="p"
-              variant="body1"
-              textAlign="center"
-              sx={{
-                fontFamily: 'var(--font-primary)',
-                fontWeight: 400,
-                color: 'text.primary',
-                lineHeight: 1.6,
-                overflowWrap: 'anywhere',
-              }}
-            >
-              {bienvenida}
-            </Typography>
-            <Box sx={{ width: '100%', minWidth: 0 }}>
-              <BotonAgregar onAdd={enviar} label="Bienvenida" showPhotoOption={false} agregarEditar="Editar" />
-            </Box>
-          </Stack>
-        </Card>
-      </Container>
-    </LayoutBienvenida>
+    <>
+      <LayoutBienvenida>
+        <Container maxWidth="sm" sx={{ width: '100%', px: { xs: 2, sm: 3 } }}>
+          <Card
+            elevation={0}
+            sx={{
+              width: '100%',
+              maxWidth: 640,
+              mx: 'auto',
+              p: { xs: 2.5, sm: 3 },
+              maxHeight: { xs: 'calc(100vh - 250px)', sm: 'calc(100vh - 280px)' },
+              overflow: 'auto',
+              border: '1px solid',
+              borderColor: 'divider',
+              bgcolor: 'background.paper',
+              borderRadius: 2,
+              boxSizing: 'border-box',
+            }}
+          >
+            <Stack spacing={3} alignItems="stretch">
+              <Typography
+                component="p"
+                variant="body1"
+                textAlign="center"
+                sx={{
+                  fontFamily: 'var(--font-primary)',
+                  fontWeight: 400,
+                  color: 'text.primary',
+                  lineHeight: 1.6,
+                  overflowWrap: 'anywhere',
+                }}
+              >
+                {bienvenida}
+              </Typography>
+              <Box sx={{ width: '100%', minWidth: 0 }}>
+                <BotonAgregar
+                  onAdd={enviar}
+                  label="Bienvenida"
+                  showPhotoOption={false}
+                  agregarEditar="Guardar"
+                  initialText={bienvenida}
+                />
+              </Box>
+            </Stack>
+          </Card>
+        </Container>
+      </LayoutBienvenida>
+      <SnackbarOutlet />
+    </>
   );
 }

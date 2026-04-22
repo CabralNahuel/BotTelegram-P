@@ -10,6 +10,7 @@ interface BotonAgregarProps {
   showPhotoOption?: boolean;
   agregarEditar: string;
   mostrarEstilos?: boolean;
+  initialText?: string;
 }
 
 /** Alto inicial del área editable y del botón enviar (el editor puede crecer; el botón no). */
@@ -17,12 +18,29 @@ const EDITOR_ROW_HEIGHT_PX = 48;
 /** Tope de crecimiento visual del editor antes de activar scroll interno. */
 const EDITOR_MAX_HEIGHT_PX = 176;
 
-const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOption = false, agregarEditar, mostrarEstilos = false }) => {
+const BotonAgregar: React.FC<BotonAgregarProps> = ({
+  onAdd,
+  label,
+  showPhotoOption = false,
+  agregarEditar,
+  mostrarEstilos = false,
+  initialText = '',
+}) => {
   const [nuevoNombre, setNuevoNombre] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState<File | undefined>(undefined);
   const [isHovered, setIsHovered] = useState(false);
+  const [hasUserTyped, setHasUserTyped] = useState(false);
 
   const editorRef = useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!editorRef.current) return;
+    const current = cleanHTML(editorRef.current.innerText);
+    if (!hasUserTyped || current === '') {
+      editorRef.current.innerText = initialText;
+      setNuevoNombre(cleanHTML(initialText));
+    }
+  }, [initialText, hasUserTyped]);
 
   const cleanHTML = (html: string) => {
     return html.replace(/<div>/g, '').replace(/<\/div>/g, '').replace(/<br>/g, '').replace(/&nbsp;/g, ' ').trim();
@@ -47,7 +65,13 @@ const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOpti
   };
 
   const handleEditorKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    const isBienvenida = label.toLowerCase() === 'bienvenida';
+    if (isBienvenida && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      handleAdd();
+      return;
+    }
+    if (!isBienvenida && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleAdd();
     }
@@ -62,6 +86,7 @@ const BotonAgregar: React.FC<BotonAgregarProps> = ({ onAdd, label, showPhotoOpti
 
   const handleTextChange = () => {
     if (editorRef.current) {
+      setHasUserTyped(true);
       setNuevoNombre(cleanHTML(editorRef.current.innerText)); // Actualizar el estado con el texto limpio del editor
     }
   };

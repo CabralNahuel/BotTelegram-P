@@ -149,7 +149,7 @@ export default function DrawerN() {
                             width: '100%',
                             maxWidth: '100%',
                             px: { xs: 1, sm: 2 },
-                            bgcolor: 'var(--pba-primary)',
+                            bgcolor: 'cornflowerblue',
                             color: '#fff',
                             display: 'flex',
                             flexDirection: 'row',

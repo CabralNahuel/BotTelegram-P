@@ -362,40 +362,39 @@ const MensajesN: React.FC = () => {
           <Typography
             component="h3"
             sx={{
-              position: 'sticky',
-              top: 0,
-              zIndex: 10,
               py: '1rem',
               textAlign: 'center',
               fontFamily: 'var(--font-primary)',
               fontWeight: 700,
               color: 'var(--pba-primary)',
               fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
-              background: 'var(--pba-header-bg)',
             }}
           >
             Mensajes
           </Typography>
-          <TableContainer sx={{ overflowX: 'auto', width: '100%', maxWidth: '100%', flex: 1, minHeight: 0 }}>
-            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
-              <TableBody>
-                {mensajes.map((mensaje) => (
+          <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            <TableContainer sx={{ overflowX: 'auto', width: '100%', maxWidth: '100%', flex: 1, minHeight: 0 }}>
+              <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', borderCollapse: 'separate', borderSpacing: '0 10px' }}>
+                <TableBody>
+                  {mensajes.map((mensaje) => (
 
-                  <ItemsN
-                    key={mensaje.id}
-                    fila={{ id: mensaje.id, titulo: mensaje.mensaje ?? mensaje.titulo, etiqueta: mensaje.etiqueta }}
-                    editar={editar}
-                    redireccion=''
-                    ruteo={false}
-                    redirigir={() => ("")}
-                    manejarEliminar={manejarEliminar}
-                    mostrarEliminar={true}
-                    textoEliminacionSegura="¿Estás seguro de eliminar este mensaje?"
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    <ItemsN
+                      key={mensaje.id}
+                      fila={{ id: mensaje.id, titulo: mensaje.mensaje ?? mensaje.titulo, etiqueta: mensaje.etiqueta }}
+                      editar={editar}
+                      redireccion=''
+                      ruteo={false}
+                      redirigir={() => ("")}
+                      manejarEliminar={manejarEliminar}
+                      mostrarEliminar={true}
+                      textoEliminacionSegura="¿Estás seguro de eliminar este mensaje?"
+                      estiloMenu
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
           <Dialog open={openDialog} onClose={manejarCerrarDialogo} fullWidth maxWidth="sm">
             <DialogTitle sx={{ textAlign: 'center' }}> Editar </DialogTitle>
             <DialogContent>
@@ -438,15 +437,17 @@ const MensajesN: React.FC = () => {
             </DialogActions>
           </Dialog>
           <Box sx={{ p: { xs: "6px 8px", sm: "1px 10px" }, width: '100%', minWidth: 0, boxSizing: 'border-box', mt: 'auto', mb: '2rem' }}>
-             <Box sx={{ p: 1, display: "flex", px: 0, gap: 1, minHeight: "2rem", alignItems: "center", flexWrap: 'wrap' }}>
-                <Button className={isBold ? 'boton-activo' : 'BotonAgregar__botonesDeEstilos'} onClick={handleBold} >Negrita</Button>
-                <Button className={isItalic ? 'boton-activo' : 'BotonAgregar__botonesDeEstilos'} onClick={handleItalic} variant="outlined">Cursiva</Button>
-              </Box>
-              <EditorMensaje 
-            texto={texto} 
-            setTexto={setTexto} 
-            manejarAgregarMensaje={manejarAgregarMensaje} 
-          />
+            <Box sx={{ width: '100%', maxWidth: 1100, mx: 'auto' }}>
+              <Box sx={{ p: 1, display: "flex", px: 0, gap: 1, minHeight: "2rem", alignItems: "center", flexWrap: 'wrap' }}>
+                  <Button className={isBold ? 'boton-activo' : 'BotonAgregar__botonesDeEstilos'} onClick={handleBold} >Negrita</Button>
+                  <Button className={isItalic ? 'boton-activo' : 'BotonAgregar__botonesDeEstilos'} onClick={handleItalic} variant="outlined">Cursiva</Button>
+                </Box>
+                <EditorMensaje 
+              texto={texto} 
+              setTexto={setTexto} 
+              manejarAgregarMensaje={manejarAgregarMensaje} 
+            />
+            </Box>
           </Box>
 
         </Box>

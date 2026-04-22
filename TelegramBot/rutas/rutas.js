@@ -71,6 +71,12 @@ router.put('/home/bienvenida', async (req, res) => {
     return res.json({ message: 'Texto de bienvenida actualizado correctamente' });
   } catch (error) {
     console.error('Error al actualizar bienvenida:', error);
+    if (error?.original?.code === 'ER_DATA_TOO_LONG' || error?.parent?.code === 'ER_DATA_TOO_LONG') {
+      return res.status(400).json({
+        message: 'El texto de bienvenida es demasiado largo para la columna actual de la base de datos.',
+        code: 'WELCOME_TEXT_TOO_LONG',
+      });
+    }
     return res.status(500).json({ message: 'Error del servidor', error });
   }
 });

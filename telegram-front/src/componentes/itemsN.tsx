@@ -18,6 +18,7 @@ interface ItemsNProps {
   manejarEliminar: (id: number) => void;
   mostrarEliminar: boolean;
   textoEliminacionSegura: string;
+  estiloMenu?: boolean;
 }
 
 const ItemsN: React.FC<ItemsNProps> = ({
@@ -29,6 +30,7 @@ const ItemsN: React.FC<ItemsNProps> = ({
   manejarEliminar,
   mostrarEliminar,
   textoEliminacionSegura,
+  estiloMenu = false,
 }) => {
   const [popUpEliminar, setPopUpEliminar] = React.useState(false);
 
@@ -46,7 +48,30 @@ const ItemsN: React.FC<ItemsNProps> = ({
   };
 
   return (
-    <TableRow key={fila.id}>
+    <TableRow
+      key={fila.id}
+      sx={
+        estiloMenu
+          ? {
+              '& td': {
+                bgcolor: 'rgba(255,255,255,0.04)',
+                borderTop: '1px solid var(--pba-gris-claro)',
+                borderBottom: '1px solid var(--pba-gris-claro)',
+              },
+              '& td:first-of-type': {
+                borderLeft: '1px solid var(--pba-gris-claro)',
+                borderTopLeftRadius: 1.5,
+                borderBottomLeftRadius: 1.5,
+              },
+              '& td:last-of-type': {
+                borderRight: '1px solid var(--pba-gris-claro)',
+                borderTopRightRadius: 1.5,
+                borderBottomRightRadius: 1.5,
+              },
+            }
+          : undefined
+      }
+    >
       {/* el dangerous es para que levante los datos de la base de date en html y los muestre bien en el front */}
       <TableCell
         sx={{
@@ -55,6 +80,7 @@ const ItemsN: React.FC<ItemsNProps> = ({
           overflowWrap: 'anywhere',
           wordBreak: 'break-word',
           verticalAlign: 'top',
+          ...(estiloMenu ? { py: 1.5 } : {}),
         }}
       >
         <Box
@@ -63,10 +89,14 @@ const ItemsN: React.FC<ItemsNProps> = ({
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(fila.titulo) }}
         />
       </TableCell>
-      <TableCell align="right" sx={{ width: 1, whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+      <TableCell align="right" sx={{ width: 1, whiteSpace: 'nowrap', verticalAlign: 'top', ...(estiloMenu ? { py: 1 } : {}) }}>
         <IconButton
           aria-label="editar"
           onClick={() => editar(fila)}
+          sx={{
+            '& .MuiSvgIcon-root': { color: '#c7bcff' },
+            '&:hover .MuiSvgIcon-root': { color: '#ffffff' },
+          }}
         >
           <EditIcon />
         </IconButton>
@@ -74,8 +104,11 @@ const ItemsN: React.FC<ItemsNProps> = ({
         {mostrarEliminar && (
           <IconButton
             aria-label="eliminar"
-            color='error'
             onClick={handleDeleteClick}
+            sx={{
+              '& .MuiSvgIcon-root': { color: 'var(--color5)' },
+              '&:hover .MuiSvgIcon-root': { color: '#d32f2f' },
+            }}
           >
             <DeleteIcon />
           </IconButton>
@@ -87,6 +120,10 @@ const ItemsN: React.FC<ItemsNProps> = ({
             onClick={(event) => {
               event.stopPropagation(); // Evitar que el evento de clic se propague al TableRow
               redirigir(redireccion);
+            }}
+            sx={{
+              '& .MuiSvgIcon-root': { color: '#c7bcff' },
+              '&:hover .MuiSvgIcon-root': { color: '#ffffff' },
             }}
           >
             <AddIcon />
