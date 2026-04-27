@@ -1,6 +1,10 @@
 [build]
   functions = "netlify/functions"
 
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["mysql2", "sequelize", "bcrypt", "jsonwebtoken", "grammy", "express", "cors", "dotenv"]
+
 [[redirects]]
   from = "/health"
   to = "/.netlify/functions/api/health"
