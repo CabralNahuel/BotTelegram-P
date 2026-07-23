@@ -139,6 +139,34 @@
   --pba-sombra-boton: 0px 8px 16px rgba(0, 0, 0, 0.45);
 }
 
+/* ========== Ajustes responsive globales (iOS + Android) ========== */
+html {
+  /* Evita que iOS/Android inflen el tamaño del texto en horizontal. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Alto real de viewport en móvil (descuenta la barra de direcciones en iOS). */
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Red de seguridad: ningún elemento debe provocar scroll horizontal en la página. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* En pantallas chicas, iOS hace zoom al enfocar inputs con fuente < 16px.
+   Forzamos 16px en los campos para que no "salte" el layout al tipear. */
+@media (max-width: 600px) {
+  input,
+  select,
+  textarea,
+  .MuiInputBase-input {
+    font-size: 16px !important;
+  }
+}
+
 /* Jerarquía tipográfica base (Inter) */
 body {
   font-family: var(--font-primary);
@@ -148,6 +176,8 @@ body {
   background-color: var(--pba-bg-pagina);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Suaviza el scroll táctil en iOS dentro de contenedores con overflow. */
+  -webkit-overflow-scrolling: touch;
 }
 
 h1,

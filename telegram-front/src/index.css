@@ -1,4 +1,6 @@
 /* Refuerzo accesibilidad: foco visible coherente con PBA */
 #root {
   min-height: 100vh;
+  /* iOS Safari: 100dvh descuenta la barra de direcciones (evita footer cortado). */
+  min-height: 100dvh;
 }

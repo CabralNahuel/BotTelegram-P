@@ -63,7 +63,7 @@ export default function DrawerN() {
     };
 
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh', maxHeight: '100vh', background: 'var(--pba-bg-pagina)' }}>
+        <Box sx={{ display: 'flex', minHeight: '100dvh', maxHeight: '100dvh', background: 'var(--pba-bg-pagina)' }}>
             <MuiAppBar
                 position="fixed"
                 elevation={0}
