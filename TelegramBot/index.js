@@ -48,7 +48,6 @@ const {
 const { dbConect, dbSync } = require("./conexionDB/conexionDB");
 const UsuarioMd = require("./models/model.usuario");
 const authRoutes = require("./rutas/rutas");
-const TokenMd = require("./models/model.token");
 const cors = require("cors");
 const menuRuter = require("./rutas/menu");
 
@@ -90,8 +89,10 @@ if (normalizedApiPrefix) {
 // --- Bot de Telegram ---
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
-const solicitudDeTokenPendiente = {};
-
+// Portfolio abierto: cualquiera puede usar el bot sin token.
+// Si el usuario no existe, lo registramos automáticamente para que sigan
+// funcionando el historial y las estadísticas. La password/token son
+// aleatorios y no se usan para acceder al bot (solo cumplen el modelo).
 bot.use(async (ctx, next) => {
   try {
     const userId = ctx.from && ctx.from.id;
@@ -99,56 +100,29 @@ bot.use(async (ctx, next) => {
 
     const usuario = await UsuarioMd.findByPk(userId);
 
-    if (!usuario && !solicitudDeTokenPendiente[userId]) {
-      solicitudDeTokenPendiente[userId] = true;
-      return ctx.reply(
-        "No estás registrado. Por favor, proporciona un token para registrarte."
-      );
+    if (!usuario) {
+      const crypto = require("crypto");
+      const randomPassword = crypto.randomBytes(12).toString("base64url");
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      const nuevoUsuario = await UsuarioMd.create({
+        id: userId,
+        username: ctx.from.username || String(userId),
+        password: hashedPassword,
+        token: crypto.randomBytes(12).toString("base64url"),
+        historial: [],
+      });
+
+      // Recién registrado: lo mandamos directo al menú principal (/start),
+      // ignoramos lo que haya escrito como primer mensaje.
+      await comandoStart(ctx, nuevoUsuario.historial);
+      return;
     }
 
     await next();
   } catch (err) {
-    console.error("Error al verificar el usuario:", err);
+    console.error("Error al registrar/verificar el usuario:", err);
     return ctx.reply("Ocurrió un error al verificar tu estado.");
-  }
-});
-
-bot.use(async (ctx, next) => {
-  const userId = ctx.from && ctx.from.id;
-  if (!userId) return next();
-
-  if (solicitudDeTokenPendiente[userId]) {
-    const token = ctx.message && ctx.message.text;
-    try {
-      const tokenExistente = await TokenMd.findOne();
-
-      if (tokenExistente && tokenExistente.token == token) {
-        // Contraseña aleatoria hasheada — evita exponer un default débil.
-        const randomPassword = require("crypto").randomBytes(12).toString("base64url");
-        const hashedPassword = await bcrypt.hash(randomPassword, 10);
-
-        await UsuarioMd.create({
-          id: userId,
-          username: ctx.from.username || String(userId),
-          password: hashedPassword,
-          token: tokenExistente.token,
-          historial: [],
-        });
-        delete solicitudDeTokenPendiente[userId];
-
-        await ctx.reply("Registro exitoso. Ahora puede usar el bot.");
-
-        const usuario = await UsuarioMd.findByPk(userId);
-        await comandoStart(ctx, usuario.historial);
-      } else {
-        return ctx.reply("Token no válido. Por favor, intente nuevamente.");
-      }
-    } catch (err) {
-      console.error("Error al verificar el token:", err);
-      return ctx.reply("Token no válido.");
-    }
-  } else {
-    await next();
   }
 });
 
@@ -172,11 +146,9 @@ bot.on(":text", async (ctx, next) => {
     const usuario = await UsuarioMd.findByPk(usuarioId);
     const historialUsuario = usuario ? usuario.historial : [];
 
-    if (!solicitudDeTokenPendiente[usuarioId]) {
-      historialUsuario.push(ctx.message.text);
-      if (usuario) {
-        await usuario.update({ historial: historialUsuario });
-      }
+    historialUsuario.push(ctx.message.text);
+    if (usuario) {
+      await usuario.update({ historial: historialUsuario });
     }
 
     await comandosDinamicos(ctx, historialUsuario, "", bot);
